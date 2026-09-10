@@ -3,7 +3,7 @@
 import { Fragment, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
 import { LocationIcon, SearchIcon } from "@/components/icons";
-import { FarmStory, BeyondHarvest, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
+import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
@@ -50,13 +50,14 @@ export function Storefront() {
                     )}
                   </Fragment>
                 ))}
+                {category === "All produce" && !query && <FarmStory />}
               </div>
             ) : <div className="no-results"><p>No produce matches “{query}”.</p><button type="button" onClick={() => { setQuery(""); setCategory("All produce"); }}>Show all produce</button></div>}
           </section>
-          <FarmStory />
-          <BeyondHarvest />
           <BulkSupply />
           <OrderSteps />
+          <FarmServices />
+          <FarmClose />
         </main>
       </div>
       <SiteFooter />
