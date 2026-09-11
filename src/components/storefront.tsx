@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
-import { LocationIcon, SearchIcon } from "@/components/icons";
+import { ArrowIcon, LocationIcon, SearchIcon } from "@/components/icons";
 import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
@@ -63,7 +63,10 @@ export function Storefront() {
                   <Fragment key={product.id}>
                     <ProductCard product={product} quantity={quantities[product.id] ?? 0} onAdd={() => add(product.id)} onDecrease={() => decrease(product.id)} />
                     {category === "All produce" && !query && index === 3 && (
-                      <aside className="mobile-discovery"><strong>Beyond produce</strong><a href="#training">Training →</a><a href="#services">Farm services →</a></aside>
+                      <aside className="mobile-discovery">
+                        <div><span>MORE FROM ZADOK</span><strong>Training &amp; farm services</strong></div>
+                        <a href="#services">Explore <ArrowIcon /></a>
+                      </aside>
                     )}
                     {category === "All produce" && !query && index === 8 && (
                       <aside className="mobile-update"><div><p className="eyebrow">FROM THE FARM</p><strong>This week in Omudioga</strong><span>Harvest and availability change with the season.</span></div><a href="#farm">Read update →</a></aside>
