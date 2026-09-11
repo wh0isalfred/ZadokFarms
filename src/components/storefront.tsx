@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
 import { LocationIcon, SearchIcon } from "@/components/icons";
 import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
@@ -24,6 +24,26 @@ export function Storefront() {
   const basketCount = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0);
   const add = (id: string) => setQuantities((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
   const decrease = (id: string) => setQuantities((current) => ({ ...current, [id]: Math.max((current[id] ?? 0) - 1, 0) }));
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!("IntersectionObserver" in window)) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8%", threshold: 0.12 });
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, [category, query]);
 
   return (
     <>

@@ -23,8 +23,8 @@ export function SiteHeader({ basketCount, onBasketOpen, onSearchOpen }: SiteHead
         </button>
         <span className="header-divider" aria-hidden="true" />
         <button className="basket-trigger" type="button" onClick={onBasketOpen} aria-label={`Your basket, ${basketCount} items`}>
-          <span className="basket-icon-wrap"><BasketIcon />{basketCount > 0 && <span className="basket-badge">{basketCount}</span>}</span>
-          <span>Your basket</span><span className="desktop-count"> · {basketCount}</span>
+          <span className="basket-icon-wrap"><BasketIcon />{basketCount > 0 && <span className="basket-badge" key={basketCount}>{basketCount}</span>}</span>
+          <span>Your basket</span><span className="desktop-count" key={basketCount}> · {basketCount}</span>
         </button>
       </div>
     </header>
