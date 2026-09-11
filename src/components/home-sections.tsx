@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowIcon } from "@/components/icons";
+import { ArrowIcon, FacebookIcon, InstagramIcon, WhatsAppIcon } from "@/components/icons";
 
 export function FieldLines({ className = "" }: { className?: string }) {
   return (
@@ -87,7 +87,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <p>© 2026 Zadok Farms. All rights reserved.</p>
-        <div className="footer-social" aria-label="Social links"><a href="#facebook" aria-label="Facebook">f</a><a href="#instagram" aria-label="Instagram">◎</a><a href="#youtube" aria-label="YouTube">▶</a></div>
+        <div className="footer-social" aria-label="Social links"><a href="#facebook" aria-label="Facebook"><FacebookIcon /></a><a href="#instagram" aria-label="Instagram"><InstagramIcon /></a><a href="#whatsapp" aria-label="WhatsApp"><WhatsAppIcon /></a></div>
         <nav aria-label="Legal navigation"><a href="#privacy">Privacy</a><a href="#terms">Terms</a></nav>
       </div>
     </footer>

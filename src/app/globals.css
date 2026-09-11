@@ -61,12 +61,12 @@ main { display: block; }
 .search-panel input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 1rem; }
 .search-panel button { border: 0; background: none; text-decoration: underline; cursor: pointer; }
 .catalogue { position: relative; isolation: isolate; scroll-margin-top: 110px; padding-top: 22px; }
-.catalogue > :not(.catalogue-lines) { position: relative; z-index: 1; }
+.catalogue > :not(.catalogue-lines) { position: relative; z-index: 2; }
 .catalogue-lines { opacity: .11; }
 .catalogue-lines path, .footer-lines path { stroke-dashoffset: 0; }
 .catalogue-lines-one { top: 150px; right: -165px; transform: rotate(5deg); }
-.catalogue-lines-two { top: 610px; left: -120px; width: 900px; height: 420px; opacity: .18; transform: rotate(184deg); }
-.catalogue-lines-two path:nth-child(4) { display: none; }
+.catalogue-sweep { top: 560px; left: -42px; width: min(980px,76vw); height: 430px; opacity: .46; }
+.catalogue-sweep path { vector-effect: non-scaling-stroke; stroke: var(--field); stroke-width: 1.8; stroke-linecap: round; }
 .catalogue-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .category-list { display: flex; gap: 14px; }
 .category-list button, .desktop-filters button { min-height: 42px; padding: 0 18px; border: 1px solid transparent; border-radius: 11px; background: transparent; cursor: pointer; }
@@ -193,6 +193,7 @@ main { display: block; }
 .footer-bottom nav, .footer-social { display: flex; align-items: center; gap: 12px; }
 .footer-bottom nav { gap: 20px; }
 .footer-social a { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid #464641; border-radius: 50%; color: #d8d6cf; font-size: .68rem; font-weight: 800; transition: border-color .2s ease, background-color .2s ease; }
+.footer-social svg { width: 15px; height: 15px; }
 .footer-social a:hover { border-color: #707069; background: #292925; }
 .footer-lines { z-index: 0; opacity: .3; }
 .footer-lines path { stroke: #45644f; stroke-width: 1.5; }
@@ -319,7 +320,7 @@ main { display: block; }
   .field-lines { width: 300px; height: 230px; }
   .field-lines path { stroke-width: 2.4; opacity: .78; }
   .catalogue-lines-one { top: 155px; right: -66px; }
-  .catalogue-lines-two { top: 700px; left: -72px; }
+  .catalogue-sweep { top: 700px; left: -90px; width: 520px; height: 300px; opacity: .38; }
   .services-lines { top: -4px; right: -68px; }
   .closing-lines { bottom: -78px; left: -72px; }
   .farm-close { grid-template-columns: minmax(0,1fr); }

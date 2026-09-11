@@ -51,3 +51,15 @@ export function MenuIcon(props: IconProps) {
 export function LocationIcon(props: IconProps) {
   return <svg {...iconProps} {...props}><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>;
 }
+
+export function FacebookIcon(props: IconProps) {
+  return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}><path d="M13.6 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.6 1.7-1.6H17V3.8c-.8-.1-1.6-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3V10H7.6v3h2.8v8h3.2Z" /></svg>;
+}
+
+export function InstagramIcon(props: IconProps) {
+  return <svg {...iconProps} {...props}><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4.1" /><circle cx="17.4" cy="6.7" r=".8" fill="currentColor" stroke="none" /></svg>;
+}
+
+export function WhatsAppIcon(props: IconProps) {
+  return <svg {...iconProps} {...props}><path d="M20.2 11.8a8.2 8.2 0 0 1-12.1 7.3L3.5 20.4l1.2-4.5a8.2 8.2 0 1 1 15.5-4.1Z" /><path d="M8.2 7.5c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.8 1.9c.1.3.1.5-.1.7l-.7.9c-.2.2-.1.4 0 .6.8 1.4 1.9 2.5 3.4 3.2.2.1.4.1.6-.1l.9-1.1c.2-.2.4-.3.7-.2l1.9.9c.3.1.4.3.4.5 0 .6-.3 1.5-.8 1.9-.5.5-1.3.8-2.1.7-1.2-.1-3.1-.7-5-2.4-1.5-1.4-2.6-3.1-2.9-4.4-.3-1.1 0-2.3.6-2.9l.6-.2Z" /></svg>;
+}
