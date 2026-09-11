@@ -65,7 +65,7 @@ export function Storefront() {
                     {category === "All produce" && !query && index === 3 && (
                       <aside className="mobile-discovery"><strong>Beyond produce</strong><a href="#training">Training →</a><a href="#services">Farm services →</a></aside>
                     )}
-                    {category === "All produce" && !query && index === 7 && (
+                    {category === "All produce" && !query && index === 8 && (
                       <aside className="mobile-update"><div><p className="eyebrow">FROM THE FARM</p><strong>This week in Omudioga</strong><span>Harvest and availability change with the season.</span></div><a href="#farm">Read update →</a></aside>
                     )}
                   </Fragment>
