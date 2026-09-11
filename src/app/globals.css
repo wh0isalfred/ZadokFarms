@@ -65,7 +65,7 @@ main { display: block; }
 .catalogue-lines { opacity: .11; }
 .catalogue-lines path, .footer-lines path { stroke-dashoffset: 0; }
 .catalogue-lines-one { top: 150px; right: -165px; transform: rotate(5deg); }
-.catalogue-sweep { top: 560px; left: -42px; width: min(980px,76vw); height: 430px; opacity: .46; }
+.catalogue-sweep { position: absolute; z-index: 0; top: 560px; left: -42px; width: min(980px,76vw); height: 430px; opacity: .46; pointer-events: none; }
 .catalogue-sweep path { vector-effect: non-scaling-stroke; stroke: var(--field); stroke-width: 1.8; stroke-linecap: round; }
 .catalogue-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .category-list { display: flex; gap: 14px; }
