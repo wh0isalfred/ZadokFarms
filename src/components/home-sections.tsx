@@ -38,6 +38,7 @@ export function FarmServices() {
   return (
     <section className="farm-services" id="services">
       <FieldLines className="services-lines" />
+      <FieldLines className="services-lines services-lines-two" />
       <header className="services-heading"><p className="eyebrow">TRAINING &amp; FARM SERVICES</p><h2>Learn. Build. Grow with Zadok.</h2><p>Three ways to move an agricultural idea from knowledge to productive work.</p></header>
       <div className="service-grid">
         <article className="training-card" id="training" data-reveal>
@@ -54,6 +55,7 @@ export function FarmServices() {
         </article>
       </div>
       <aside className="community-invitation" data-reveal>
+        <FieldLines className="community-lines" />
         <div><span className="community-mark" aria-hidden="true" /><p className="eyebrow">FOR GROUPS &amp; COMMUNITIES</p><h3>Planning training for more than one person?</h3></div>
         <p>Tell us who it is for and what they need to learn.</p>
         <a href="#contact">Start the conversation <ArrowIcon /></a>
@@ -63,7 +65,7 @@ export function FarmServices() {
 }
 
 export function BulkSupply() {
-  return <section className="bulk-supply" data-reveal><div className="bulk-symbol"><Image src="/images/products/seedlings.jpg" alt="" fill sizes="68px" /></div><div className="bulk-copy"><h2>Buying in volume?</h2><p>We supply larger quantities for individuals, businesses and organisations. Tell us what you need and how often.</p></div><a href="#contact">Request bulk supply <ArrowIcon /></a></section>;
+  return <section className="bulk-supply" data-reveal><FieldLines className="bulk-lines" /><div className="bulk-symbol"><Image src="/images/products/seedlings.jpg" alt="" fill sizes="68px" /></div><div className="bulk-copy"><h2>Buying in volume?</h2><p>We supply larger quantities for individuals, businesses and organisations. Tell us what you need and how often.</p></div><a href="#contact">Request bulk supply <ArrowIcon /></a></section>;
 }
 
 const steps = [

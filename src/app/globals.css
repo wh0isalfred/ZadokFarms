@@ -141,7 +141,8 @@ main { display: block; }
 .farm-story-image { position: relative; min-height: 238px; }
 .farm-story-image img, .farm-close-image img { object-fit: cover; }
 
-.bulk-supply { display: grid; grid-template-columns: 80px minmax(0,1fr) auto; align-items: center; gap: 22px; margin-top: 24px; padding: 18px 22px; border-radius: 9px; background: color-mix(in srgb,var(--ground) 38%,var(--background)); }
+.bulk-supply { position: relative; isolation: isolate; display: grid; grid-template-columns: 80px minmax(0,1fr) auto; align-items: center; gap: 22px; margin-top: 24px; padding: 18px 22px; overflow: hidden; border-radius: 9px; background: color-mix(in srgb,var(--ground) 38%,var(--background)); }
+.bulk-supply > :not(.bulk-lines) { position: relative; z-index: 2; }
 .bulk-symbol { position: relative; width: 68px; height: 52px; overflow: hidden; border-radius: 5px; background: #d4c8a9; }
 .bulk-symbol img { object-fit: cover; }
 .bulk-copy h2 { margin: 0 0 3px; font-family: var(--font-libre-baskerville), Georgia, serif; font-size: 1.25rem; letter-spacing: -.03em; }
@@ -183,6 +184,7 @@ main { display: block; }
 .service-copy a { max-width: 100%; margin-top: 13px; padding-block: 3px; font-size: .8rem; line-height: 1.35; }
 .consulting-card .service-image { aspect-ratio: 1.72; }
 .community-invitation { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(260px,.9fr) minmax(240px,1fr) auto; align-items: center; gap: clamp(26px,5vw,76px); margin-top: clamp(54px,7vw,84px); padding: 24px 0; border-block: 1px solid var(--border); color: var(--foreground); }
+.community-invitation > :not(.community-lines) { position: relative; z-index: 2; }
 .community-invitation > div { position: relative; padding-left: 18px; }
 .community-mark { position: absolute; top: 2px; bottom: 2px; left: 0; width: 3px; border-radius: 3px; background: var(--community); }
 .community-invitation .eyebrow { margin-bottom: 5px; color: var(--community); }
@@ -200,7 +202,9 @@ main { display: block; }
 .field-lines path { vector-effect: non-scaling-stroke; stroke: var(--sage); stroke-width: 2.1; stroke-linecap: round; stroke-dasharray: 760; stroke-dashoffset: 760; opacity: .95; transition: stroke-dashoffset 1.35s cubic-bezier(.2,.72,.25,1); }
 .services-lines { top: -76px; right: -230px; transform: rotate(2deg); }
 .services-lines-two { top: auto; right: auto; bottom: -145px; left: -215px; opacity: .62; transform: rotate(186deg); }
-.farm-services:has(.is-visible) .services-lines path, .farm-close.is-visible .closing-lines path { stroke-dashoffset: 0; }
+.bulk-lines { top: -126px; right: 12%; width: 350px; opacity: .45; transform: rotate(76deg); }
+.community-lines { top: -116px; right: 17%; width: 330px; opacity: .42; transform: rotate(92deg); }
+.farm-services:has(.is-visible) .services-lines path, .farm-close.is-visible .closing-lines path, .bulk-supply.is-visible .bulk-lines path, .community-invitation.is-visible .community-lines path { stroke-dashoffset: 0; }
 .field-lines path:nth-child(2) { transition-delay: .08s; }
 .field-lines path:nth-child(3) { transition-delay: .16s; }
 .field-lines path:nth-child(4) { transition-delay: .24s; }
@@ -308,7 +312,7 @@ main { display: block; }
   .catalogue-heading { padding: 21px 1px 11px; }
   .catalogue-heading > div { display: block; }
   .catalogue-heading h1 { font-size: clamp(1.65rem,7.2vw,2rem); }
-  .catalogue-heading p { margin-top: 4px; }
+  .catalogue-heading p { display: none; }
   .catalogue-heading > button { display: none; }
   .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 19px 12px; }
   .product-image { aspect-ratio: 1.37; border-radius: 6px; }
@@ -371,7 +375,9 @@ main { display: block; }
   .catalogue-lines-one { top: 104px; right: -66px; }
   .catalogue-sweep { top: auto; bottom: 285px; left: -125px; width: 650px; height: 360px; opacity: .82; }
   .services-lines { top: -4px; right: -68px; }
-  .services-lines-two { top: auto; right: auto; bottom: 120px; left: -138px; opacity: .5; }
+  .services-lines-two { top: auto; right: auto; bottom: 155px; left: -142px; opacity: .62; }
+  .bulk-lines { top: -94px; right: -70px; width: 250px; opacity: .58; transform: rotate(68deg); }
+  .community-lines { top: -72px; right: -104px; width: 245px; opacity: .55; transform: rotate(96deg); }
   .closing-lines { bottom: -78px; left: -72px; }
   .community-invitation { grid-template-columns: 1fr; gap: 14px; margin-top: 50px; padding: 22px 2px; }
   .community-invitation > p { max-width: 470px; }
