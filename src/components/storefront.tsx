@@ -66,7 +66,6 @@ export function Storefront() {
           </section>
           <section className="catalogue" id="produce">
             <FieldLines className="catalogue-lines catalogue-lines-one" />
-            <CatalogueSweep />
             <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
             <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices shown for concept only.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
             {visibleProducts.length > 0 ? (
@@ -85,7 +84,7 @@ export function Storefront() {
                     )}
                   </Fragment>
                 ))}
-                {category === "All produce" && !query && <FarmStory />}
+                {category === "All produce" && !query && <><CatalogueSweep /><FarmStory /></>}
               </div>
             ) : <div className="no-results"><p>No produce matches “{query}”.</p><button type="button" onClick={() => { setQuery(""); setCategory("All produce"); }}>Show all produce</button></div>}
           </section>
