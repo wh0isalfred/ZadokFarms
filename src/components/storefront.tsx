@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
-import { ArrowIcon, LocationIcon, SearchIcon } from "@/components/icons";
+import { ArrowIcon, ChevronIcon, LocationIcon, SearchIcon } from "@/components/icons";
 import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter, FieldLines } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
@@ -57,7 +57,7 @@ export function Storefront() {
           <section className="catalogue" id="produce">
             <FieldLines className="catalogue-lines catalogue-lines-one" />
             <FieldLines className="catalogue-lines catalogue-lines-two" />
-            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button">Available now</button><button type="button">Sort</button></div></div>
+            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
             <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices shown for concept only.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
             {visibleProducts.length > 0 ? (
               <div className="product-grid">
