@@ -38,25 +38,24 @@ export function FarmServices() {
   return (
     <section className="farm-services" id="services">
       <FieldLines className="services-lines" />
-      <FieldLines className="services-lines services-lines-two" />
       <header className="services-heading"><p className="eyebrow">TRAINING &amp; FARM SERVICES</p><h2>Learn. Build. Grow with Zadok.</h2><p>Three ways to move an agricultural idea from knowledge to productive work.</p></header>
       <div className="service-grid">
         <article className="training-card" id="training" data-reveal>
           <div className="service-image training-image"><Image src="/images/farm/training-v2.webp" alt="A practical agricultural training session in the field" fill sizes="(max-width: 699px) 100vw, 22vw" /></div>
-          <div className="training-copy"><span className="service-stage">LEARN</span><div className="programme-meta"><span>FIELD-LED SESSIONS</span><span>INDIVIDUALS · TEAMS · COMMUNITIES</span></div><h3>Agricultural training</h3><p>Practical programmes that bring agricultural knowledge into the field.</p><a className="primary-service-action" href="#training-programmes">View training programmes <ArrowIcon /></a></div>
+          <div className="training-copy"><div className="programme-meta"><span>FIELD-LED SESSIONS</span><span>INDIVIDUALS · TEAMS · COMMUNITIES</span></div><h3>Agricultural training</h3><p>Practical programmes that bring agricultural knowledge into the field.</p><a className="primary-service-action" href="#training-programmes">View training programmes <ArrowIcon /></a></div>
         </article>
         <article className="service-card greenhouse-card" id="greenhouse" data-reveal>
           <div className="service-image"><Image src="/images/farm/greenhouse.jpg" alt="A greenhouse built for productive growing" fill sizes="(max-width: 699px) 100vw, 25vw" /></div>
-          <div className="service-copy"><span className="service-stage">BUILD</span><h3>Greenhouse construction</h3><p>Planning and building productive growing environments.</p><a href="#greenhouse-services">Discuss a greenhouse project <ArrowIcon /></a></div>
+          <div className="service-copy"><h3>Greenhouse construction</h3><p>Planning and building productive growing environments.</p><a href="#greenhouse-services">Discuss a greenhouse project <ArrowIcon /></a></div>
         </article>
         <article className="service-card consulting-card" id="consulting" data-reveal>
           <div className="service-image"><Image src="/images/farm/consulting-v2.webp" alt="A farm consultant reviewing crops with a grower" fill sizes="(max-width: 699px) 100vw, 25vw" /></div>
-          <div className="service-copy"><span className="service-stage">GROW</span><h3>Agricultural consulting</h3><p>Practical support for farm setup, crop planning and operations.</p><a href="#consulting-services">Request farm guidance <ArrowIcon /></a></div>
+          <div className="service-copy"><h3>Agricultural consulting</h3><p>Practical support for farm setup, crop planning and operations.</p><a href="#consulting-services">Request farm guidance <ArrowIcon /></a></div>
         </article>
       </div>
       <aside className="community-invitation" data-reveal>
-        <div><span className="community-mark" aria-hidden="true" /><p className="eyebrow">GROWING KNOWLEDGE TOGETHER</p><h3>Planning training for a team or community?</h3></div>
-        <p>Tell us who the programme is for and what they need to learn. We’ll help shape the right starting point.</p>
+        <div><span className="community-mark" aria-hidden="true" /><p className="eyebrow">FOR GROUPS &amp; COMMUNITIES</p><h3>Planning training for more than one person?</h3></div>
+        <p>Tell us who it is for and what they need to learn.</p>
         <a href="#contact">Start the conversation <ArrowIcon /></a>
       </aside>
     </section>
