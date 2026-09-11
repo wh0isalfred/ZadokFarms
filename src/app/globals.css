@@ -65,7 +65,8 @@ main { display: block; }
 .catalogue-lines { opacity: .11; }
 .catalogue-lines path, .footer-lines path { stroke-dashoffset: 0; }
 .catalogue-lines-one { top: 150px; right: -165px; transform: rotate(5deg); }
-.catalogue-lines-two { top: 690px; left: -175px; transform: rotate(184deg); }
+.catalogue-lines-two { top: 610px; left: -120px; width: 900px; height: 420px; opacity: .18; transform: rotate(184deg); }
+.catalogue-lines-two path:nth-child(4) { display: none; }
 .catalogue-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .category-list { display: flex; gap: 14px; }
 .category-list button, .desktop-filters button { min-height: 42px; padding: 0 18px; border: 1px solid transparent; border-radius: 11px; background: transparent; cursor: pointer; }
@@ -80,7 +81,7 @@ main { display: block; }
 .catalogue-heading p { margin: 0; color: var(--muted); font-size: .86rem; }
 .catalogue-heading > button { border: 0; background: transparent; font-weight: 650; cursor: pointer; }
 .product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 22px; row-gap: 26px; }
-.product-card { min-width: 0; }
+.product-card { position: relative; min-width: 0; background: var(--background); }
 .product-image { position: relative; display: block; overflow: hidden; aspect-ratio: 1.32; border-radius: 8px; background: var(--surface-muted); }
 .product-image img, .service-image img, .farm-story-image img { object-fit: cover; transition: transform .4s cubic-bezier(.2,.65,.3,1); }
 .product-image:hover img { transform: scale(1.025); }
@@ -164,7 +165,7 @@ main { display: block; }
 .farm-close p { max-width: 570px; margin: 8px 0 14px; color: var(--muted); font-size: .86rem; line-height: 1.5; }
 .farm-close a { font-size: .82rem; }
 .field-lines { position: absolute; z-index: 0; width: 420px; height: 320px; overflow: visible; pointer-events: none; }
-.field-lines path { stroke: var(--field); stroke-width: 2.1; stroke-linecap: round; stroke-dasharray: 760; stroke-dashoffset: 760; opacity: .95; transition: stroke-dashoffset 1.35s cubic-bezier(.2,.72,.25,1); }
+.field-lines path { vector-effect: non-scaling-stroke; stroke: var(--field); stroke-width: 2.1; stroke-linecap: round; stroke-dasharray: 760; stroke-dashoffset: 760; opacity: .95; transition: stroke-dashoffset 1.35s cubic-bezier(.2,.72,.25,1); }
 .services-lines { top: -76px; right: -230px; transform: rotate(2deg); }
 .farm-services:has(.is-visible) .services-lines path, .farm-close.is-visible .closing-lines path { stroke-dashoffset: 0; }
 .field-lines path:nth-child(2) { transition-delay: .08s; }
