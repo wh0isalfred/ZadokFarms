@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowIcon } from "@/components/icons";
 
-function FieldLines({ className = "" }: { className?: string }) {
+export function FieldLines({ className = "" }: { className?: string }) {
   return (
     <svg className={`field-lines ${className}`} viewBox="0 0 420 320" fill="none" aria-hidden="true">
       <path d="M438 4C320 36 330 112 238 137C135 165 129 236 95 336" />
@@ -69,5 +69,27 @@ export function FarmClose() {
 }
 
 export function SiteFooter() {
-  return <footer className="site-footer" id="footer"><a className="footer-mark" href="#top">ZADOK FARMS</a><nav aria-label="Footer navigation"><a href="#produce">Shop</a><a href="#training">Training</a><a href="#services">Services</a><a href="#farm">Our farm</a><a href="#about">About</a></nav><div className="footer-social" aria-label="Social links"><a href="#facebook" aria-label="Facebook">f</a><a href="#instagram" aria-label="Instagram">◎</a><a href="#youtube" aria-label="YouTube">▶</a></div><p>Good food.<br />Stronger tomorrows.</p></footer>;
+  return (
+    <footer className="site-footer" id="footer">
+      <FieldLines className="footer-lines footer-lines-one" />
+      <FieldLines className="footer-lines footer-lines-two" />
+      <div className="footer-main">
+        <div className="footer-brand">
+          <a className="footer-mark" href="#top">ZADOK FARMS</a>
+          <p>Fresh produce, practical agricultural knowledge and farm services—grounded in the work.</p>
+          <span className="footer-location"><i aria-hidden="true" />Omudioga, Rivers State</span>
+        </div>
+        <div className="footer-groups">
+          <section><h2>Shop</h2><a href="#produce">Available produce</a><a href="#produce">Seedlings</a><a href="#order-information">How orders work</a></section>
+          <section><h2>Learn &amp; build</h2><a href="#training">Agricultural training</a><a href="#greenhouse">Greenhouse construction</a><a href="#consulting">Farm consulting</a></section>
+          <section><h2>Zadok Farms</h2><a href="#farm">Our farm</a><a href="#about">About Zadok</a><a href="#contact">Contact</a></section>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>© 2026 Zadok Farms. All rights reserved.</p>
+        <div className="footer-social" aria-label="Social links"><a href="#facebook" aria-label="Facebook">f</a><a href="#instagram" aria-label="Instagram">◎</a><a href="#youtube" aria-label="YouTube">▶</a></div>
+        <nav aria-label="Legal navigation"><a href="#privacy">Privacy</a><a href="#terms">Terms</a></nav>
+      </div>
+    </footer>
+  );
 }
