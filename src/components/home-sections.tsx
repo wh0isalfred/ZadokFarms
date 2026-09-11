@@ -12,6 +12,19 @@ export function FieldLines({ className = "" }: { className?: string }) {
   );
 }
 
+function FooterLeaf({ className }: { className: string }) {
+  return (
+    <div className={`footer-leaf ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 240 320" fill="none">
+        <path d="M31 304C38 204 72 82 204 17C215 130 178 253 44 301Z" />
+        <path d="M34 301C75 233 119 167 196 31" />
+        <path d="M65 251C86 250 112 253 139 265M82 216C107 216 137 220 167 232M99 181C127 181 158 187 188 202M118 145C143 147 169 152 199 166M137 109C158 111 178 116 205 128" />
+        <path d="M73 238C69 218 65 198 66 176M94 202C89 179 87 158 90 135M117 164C112 141 113 119 118 96M142 126C139 104 142 84 149 64" />
+      </svg>
+    </div>
+  );
+}
+
 export function FarmStory() {
   return (
     <aside className="farm-story" id="farm" data-reveal>
@@ -71,6 +84,8 @@ export function FarmClose() {
 export function SiteFooter() {
   return (
     <footer className="site-footer" id="footer">
+      <FooterLeaf className="footer-leaf-large" />
+      <FooterLeaf className="footer-leaf-small" />
       <FieldLines className="footer-lines footer-lines-one" />
       <FieldLines className="footer-lines footer-lines-two" />
       <div className="footer-main">
