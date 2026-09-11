@@ -9,9 +9,9 @@ import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
 import { categories, type Category, products } from "@/data/products";
 
-function CatalogueSweep() {
+function CatalogueSweep({ className = "" }: { className?: string }) {
   return (
-    <svg className="catalogue-lines catalogue-sweep" viewBox="0 0 960 420" fill="none" aria-hidden="true">
+    <svg className={`catalogue-lines catalogue-sweep ${className}`} viewBox="0 0 960 420" fill="none" aria-hidden="true">
       <path d="M-24 34C132 32 128 126 310 148C522 174 616 238 846 390" />
       <path d="M-30 82C116 80 122 158 296 182C496 210 584 268 798 406" />
       <path d="M-36 130C100 128 112 190 282 218C466 248 548 300 748 418" />
@@ -66,8 +66,15 @@ export function Storefront() {
           </section>
           <section className="catalogue" id="produce">
             <FieldLines className="catalogue-lines catalogue-lines-one" />
+            <header className="catalogue-intro">
+              <div>
+                <p className="eyebrow">ZADOK FARMS · OMUDIOGA</p>
+                <h1>Food, knowledge and farm infrastructure—from one working farm.</h1>
+              </div>
+              <p>Fresh produce for today. Practical agricultural capacity for what comes next.</p>
+            </header>
             <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
-            <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices shown for concept only.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
+            <div className="catalogue-heading"><div><h2>Available from the farm</h2><p>Prices shown for concept only.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
             {visibleProducts.length > 0 ? (
               <div className="product-grid">
                 {visibleProducts.map((product, index) => (
@@ -84,7 +91,7 @@ export function Storefront() {
                     )}
                   </Fragment>
                 ))}
-                {category === "All produce" && !query && <><CatalogueSweep /><FarmStory /></>}
+                {category === "All produce" && !query && <><CatalogueSweep /><CatalogueSweep className="catalogue-sweep-two" /><FarmStory /></>}
               </div>
             ) : <div className="no-results"><p>No produce matches “{query}”.</p><button type="button" onClick={() => { setQuery(""); setCategory("All produce"); }}>Show all produce</button></div>}
           </section>
