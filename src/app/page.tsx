@@ -1,5 +1,8 @@
 import { Storefront } from "@/components/storefront";
+import { getPublishedProducts } from "@/lib/products";
 
-export default function Home() {
-  return <Storefront />;
+export default async function Home() {
+  const products = await getPublishedProducts();
+
+  return <Storefront products={products} />;
 }

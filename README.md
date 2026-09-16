@@ -1,8 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zadok Farm
+
+The public commerce website and operational web application for Zadok Farm.
+
+## Current foundation
+
+- Next.js 16 App Router
+- Supabase Postgres, Auth and Storage
+- Product-first public catalogue
+- Planned WhatsApp order-request handoff
+- Admin and staff operations without customer accounts
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.example` to `.env.local` and provide the Zadok Supabase project URL and publishable key. Never expose a secret or service-role key through a `NEXT_PUBLIC_` variable.
+
+Install dependencies and run the development server:
 
 ```bash
 npm run dev
@@ -14,11 +26,17 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database workflow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All schema changes must be represented by files in `supabase/migrations`. Create migrations with:
+
+```bash
+npx supabase migration new descriptive_name
+```
+
+Generate database types again whenever a migration changes the public schema.
 
 ## Learn More
 

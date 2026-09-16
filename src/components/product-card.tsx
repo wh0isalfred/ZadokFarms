@@ -21,7 +21,7 @@ export function ProductCard({ product, quantity, onAdd, onDecrease }: ProductCar
   return (
     <article className="product-card">
       <a className="product-image" href={`#${product.id}`} aria-label={`View ${product.name}`}>
-        <Image src={product.image} alt={product.name} fill sizes="(max-width: 699px) 50vw, (max-width: 1099px) 33vw, 25vw" />
+        <Image src={product.image} alt={product.imageAlt ?? product.name} fill sizes="(max-width: 699px) 50vw, (max-width: 1099px) 33vw, 25vw" />
       </a>
       <div className="product-info">
         <h3>{product.name}</h3>

@@ -9,6 +9,7 @@ export type Product = {
   unit: string;
   status: ProductStatus;
   image: string;
+  imageAlt?: string;
 };
 
 export const products: Product[] = [

@@ -7,7 +7,7 @@ import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter,
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
-import { categories, type Category, products } from "@/data/products";
+import { categories, type Category, type Product } from "@/data/products";
 
 function CatalogueSweep({ className = "" }: { className?: string }) {
   return (
@@ -19,7 +19,7 @@ function CatalogueSweep({ className = "" }: { className?: string }) {
   );
 }
 
-export function Storefront() {
+export function Storefront({ products }: { products: Product[] }) {
   const [category, setCategory] = useState<Category>("All produce");
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -29,7 +29,7 @@ export function Storefront() {
   const visibleProducts = useMemo(() => products.filter((product) => {
     const categoryMatch = category === "All produce" || product.category === category;
     return categoryMatch && product.name.toLowerCase().includes(query.trim().toLowerCase());
-  }), [category, query]);
+  }), [category, products, query]);
 
   const basketCount = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0);
   const add = (id: string) => setQuantities((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
