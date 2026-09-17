@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
+import { OrderRequestForm } from "@/components/order-request-form";
 
 type BasketDrawerProps = {
   open: boolean;
@@ -81,7 +82,7 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
             </div>
             <div className="basket-summary"><span>Estimated total</span><strong>{formatNaira(total)}</strong></div>
             <p className="basket-note" id="basket-request-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
-            <button className="checkout-button" type="button" disabled aria-describedby="basket-request-note">Order details coming next</button>
+            <OrderRequestForm products={products} quantities={quantities} />
           </>
         )}
       </aside>
