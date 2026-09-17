@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -465,7 +465,15 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      submit_order_request: {
+        Args: {
+          p_fingerprint: string
+          p_key: string
+          p_payload: Json
+          p_phone_hash: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       inventory_adjustment_reason:
@@ -657,4 +665,3 @@ export const Constants = {
     },
   },
 } as const
-
