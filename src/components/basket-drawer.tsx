@@ -58,7 +58,7 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
   return (
     <div className="drawer-layer open">
       <button className="drawer-backdrop" type="button" onClick={onClose} aria-label="Close your basket" />
-      <aside className="basket-drawer" aria-describedby="basket-request-note" aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
+      <aside className="basket-drawer" aria-describedby={items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
         <div className="drawer-heading">
           <div><p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title">Your basket</h2></div>
           <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close your basket">×</button>
@@ -71,7 +71,11 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
               {items.map((product) => (
                 <div className="basket-row" key={product.id}>
                   <div><strong>{product.name}</strong><span>{formatNaira(product.price)} / {product.unit}</span></div>
-                  <div className="mini-stepper"><button type="button" onClick={() => onDecrease(product.id)}>−</button><span>{quantities[product.id]}</span><button type="button" onClick={() => onAdd(product.id)}>+</button></div>
+                  <div className="mini-stepper" aria-label={`${product.name} quantity`}>
+                    <button type="button" onClick={() => onDecrease(product.id)} aria-label={`Remove one ${product.name}`}>−</button>
+                    <output aria-live="polite">{quantities[product.id]}</output>
+                    <button type="button" onClick={() => onAdd(product.id)} aria-label={`Add another ${product.name}`}>+</button>
+                  </div>
                 </div>
               ))}
             </div>

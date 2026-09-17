@@ -265,9 +265,9 @@ main { display: block; }
 .basket-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
 .basket-row strong, .basket-row span { display: block; }
 .basket-row div > span { margin-top: 4px; color: var(--muted); font-size: .85rem; }
-.mini-stepper { display: grid; grid-template-columns: 32px 30px 32px; align-items: center; border: 1px solid var(--border); border-radius: 7px; }
-.mini-stepper button { height: 34px; border: 0; background: transparent; cursor: pointer; }
-.mini-stepper > span { margin: 0!important; text-align: center; color: var(--foreground)!important; }
+.mini-stepper { display: grid; grid-template-columns: 44px 34px 44px; align-items: center; border: 1px solid var(--border); border-radius: 7px; }
+.mini-stepper button { width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer; }
+.mini-stepper > output { display: grid; min-width: 34px; height: 44px; margin: 0!important; place-items: center; border-inline: 1px solid var(--border); color: var(--foreground)!important; font-size: .85rem; font-weight: 650; }
 .basket-summary { display: flex; justify-content: space-between; margin-top: auto; padding: 22px 0 8px; font-size: 1.05rem; }
 .basket-note { margin: 0 0 18px; color: var(--muted); font-size: .86rem; line-height: 1.45; }
 .checkout-button { width: 100%; min-height: 48px; border: 0; border-radius: 7px; background: #cbc6bb; color: #626159; font-weight: 650; }
