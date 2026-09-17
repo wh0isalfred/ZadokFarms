@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
+import { useBasket } from "@/components/use-basket";
 import { ArrowIcon, ChevronIcon, LocationIcon, SearchIcon } from "@/components/icons";
 import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter, FieldLines } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
@@ -24,7 +25,7 @@ export function Storefront({ products }: { products: Product[] }) {
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [basketOpen, setBasketOpen] = useState(false);
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const { quantities, add, decrease } = useBasket(products);
 
   const visibleProducts = useMemo(() => products.filter((product) => {
     const categoryMatch = category === "All produce" || product.category === category;
@@ -32,9 +33,6 @@ export function Storefront({ products }: { products: Product[] }) {
   }), [category, products, query]);
 
   const basketCount = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0);
-  const add = (id: string) => setQuantities((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
-  const decrease = (id: string) => setQuantities((current) => ({ ...current, [id]: Math.max((current[id] ?? 0) - 1, 0) }));
-
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>("[data-reveal]");
     if (!("IntersectionObserver" in window)) {

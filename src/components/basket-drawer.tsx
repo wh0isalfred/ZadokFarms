@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
 
@@ -14,16 +14,43 @@ type BasketDrawerProps = {
 };
 
 export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDecrease }: BasketDrawerProps) {
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
   const items = products.filter((product) => (quantities[product.id] ?? 0) > 0);
   const total = items.reduce((sum, product) => sum + product.price * quantities[product.id], 0);
 
   useEffect(() => {
     if (!open) return;
+    previouslyFocusedElement.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.classList.add("drawer-open");
+    closeButtonRef.current?.focus();
+
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
+      if (event.key !== "Tab") return;
+
+      const focusableElements = drawerRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusableElements?.length) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     };
     document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.classList.remove("drawer-open");
+      document.removeEventListener("keydown", closeOnEscape);
+      previouslyFocusedElement.current?.focus();
+    };
   }, [open, onClose]);
 
   if (!open) return null;
@@ -31,10 +58,10 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
   return (
     <div className="drawer-layer open">
       <button className="drawer-backdrop" type="button" onClick={onClose} aria-label="Close your basket" />
-      <aside className="basket-drawer" aria-label="Your basket" aria-modal="true" role="dialog">
+      <aside className="basket-drawer" aria-describedby="basket-request-note" aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
         <div className="drawer-heading">
-          <div><p className="eyebrow">ORDER REQUEST</p><h2>Your basket</h2></div>
-          <button type="button" onClick={onClose} aria-label="Close your basket">×</button>
+          <div><p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title">Your basket</h2></div>
+          <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close your basket">×</button>
         </div>
         {items.length === 0 ? (
           <div className="empty-basket"><p>Your basket is empty.</p><button type="button" onClick={onClose}>Continue shopping</button></div>
@@ -49,8 +76,8 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
               ))}
             </div>
             <div className="basket-summary"><span>Estimated total</span><strong>{formatNaira(total)}</strong></div>
-            <p className="basket-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
-            <button className="checkout-button" type="button">Continue with request</button>
+            <p className="basket-note" id="basket-request-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
+            <button className="checkout-button" type="button" disabled aria-describedby="basket-request-note">Order details coming next</button>
           </>
         )}
       </aside>
