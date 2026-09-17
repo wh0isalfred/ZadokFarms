@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { handleOrderRequest } from "../src/lib/orders/boundary";
-import { orderRequestSchema } from "../src/lib/orders/contract";
+import { orderRequestSchema, orderDetailsSchema, receiptSchema } from "../src/lib/orders/contract";
 
 const input = {
   key: "9748c004-6b63-4943-8d8c-e073d0808129",
@@ -10,9 +10,26 @@ const input = {
 function request(body: unknown = input, headers: Record<string, string> = {}) {
   return new Request("https://farm.test/api/order-requests", { method: "POST", headers: { origin: "https://farm.test", "content-type": "application/json", ...headers }, body: JSON.stringify(body) });
 }
-const receipt = { reference: "ZF-20260917-A1B2C3D4", items: [{ name: "Cucumber", unit: "5 kg", price: 3200, quantity: 2 }] };
+const receipt = { reference: "ZF-20260917-A2B3C4", items: [{ name: "Cucumber", unit: "5 kg", price: 3200, quantity: 2 }] };
 
 describe("order mutation boundary", () => {
+  it("requires a bounded address only for delivery and strips it for pickup/guidance", () => {
+    for (const delivery_address of ["", "   ", "x".repeat(501)]) {
+      expect(orderDetailsSchema.safeParse({ ...input.details, fulfilment: "delivery", delivery_address }).success).toBe(false);
+    }
+    expect(orderDetailsSchema.parse({ ...input.details, fulfilment: "delivery", delivery_address: "  12 Test Street, Port Harcourt  " }).delivery_address).toBe("12 Test Street, Port Harcourt");
+    for (const fulfilment of ["pickup", "to_confirm"]) {
+      expect(orderDetailsSchema.parse({ ...input.details, fulfilment }).delivery_address).toBe("");
+      expect(orderDetailsSchema.parse({ ...input.details, fulfilment, delivery_address: "old address" }).delivery_address).toBe("");
+    }
+    expect(orderDetailsSchema.safeParse({ ...input.details, note: "x".repeat(501) }).success).toBe(false);
+  });
+  it("accepts only six unambiguous reference characters", () => {
+    expect(receiptSchema.safeParse(receipt).success).toBe(true);
+    for (const suffix of ["A1B2C3", "A0B2C3", "AOB2C3", "AIB2C3", "ALB2C3", "ABCDEFGH"]) {
+      expect(receiptSchema.safeParse({ ...receipt, reference: `ZF-20260917-${suffix}` }).success).toBe(false);
+    }
+  });
   it("normalizes phone and rejects duplicates, extra fields, empty baskets and unsafe quantities", () => {
     expect(orderRequestSchema.parse(input).details.phone).toBe("+2348012345678");
     for (const body of [

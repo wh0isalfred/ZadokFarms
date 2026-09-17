@@ -1,6 +1,6 @@
 # Zadok Farm — Project Handoff and Current State
 
-Last updated: 16 September 2026
+Last updated: 17 September 2026
 
 This is the compact continuity document for a fresh Codex or Claude session. Read `AGENTS.md` first; this file records the approved product and current implementation state.
 
@@ -83,38 +83,50 @@ Committed migrations:
 
 The catalogue is seeded with the nine concept products and reads from Supabase server-side, with the former static list retained only as a temporary resilience fallback.
 
-## Latest completed milestone
+## Completed ordering increments
 
-Remote `main` currently ends at:
+Basket milestones are complete in `d791867` and `d1c8002`: versioned/validated device-local persistence, stale/unavailable product removal, cross-tab sync, focus trap/restoration, labelled 44px controls, live quantity announcements and correct empty-drawer ARIA.
 
-- `fefc92a fix: publish complete Supabase foundation files`
+The request boundary began in `8bef487`, with generated types corrected in `e1691ca`. This forward correction completes:
 
-Verification completed for that milestone:
+- Progressive basket review to Request details, back navigation, full-height mobile scrolling and return to review when empty.
+- Required full name, international WhatsApp number, and pickup/delivery/to_confirm preference ("I need guidance"). Delivery requires one 1-500 character trimmed address; an optional 500-character note uses `customer_note`.
+- Accessible fields/errors, focused feedback, pending/duplicate-click handling and retry. Tab-scoped sessionStorage retains drafts and unresolved payloads; accepted receipts replace contact data. Basket contents are retained.
+- Zod validation, bounded JSON parsing, HMAC fingerprinting and response mapping in the API route. It uses the publishable/anon key, never a service-role key.
+- One anonymous SECURITY DEFINER RPC with empty search_path and schema-qualified table references. Execute is revoked from PUBLIC/authenticated/service_role and granted to anon. Public table inserts stay closed; private retry/limit tables remain inaccessible to public roles.
+- New customer per request; atomic customer/order/current item snapshots/initial submitted event. No phone deduplication, accounts, payments, reservations, stock decrement or inventory adjustment.
+- Unique `order_requests.idempotency_key` and constrained `delivery_address` snapshot. Matching key/fingerprint/database-computed payload hash returns the original receipt; altered input conflicts and concurrent retries cannot duplicate records.
+- Reference generation is included: `ZF-YYYYMMDD-XXXXXX`, Lagos date, six suffix characters excluding 0/O/1/I/L and up to ten unique-reference collision retries.
+- Current published available/limited products in published categories supply snapshot names/prices/units. Client expected values only detect stale views. Quantities must satisfy current minimum/step rules and technical bounds; stock is not guaranteed.
 
-- `npm run lint`
-- `npm run build`
-- production server/runtime HTML smoke check
-- live catalogue query
-- Supabase security advisors with no security findings
+Applied migrations now also include:
 
-The remaining “unused index” performance notices were expected on a newly created database with no workload.
+- `20260917020818_order_request_boundary.sql` (unchanged).
+- `20260917152116_complete_public_order_request.sql` (forward correction, matching live history).
 
-## Next approved milestone
+`src/types/database.ts` was regenerated from live Supabase after the correction.
 
-Build the first complete customer ordering vertical slice:
+### Abuse, environment and retry trade-offs
 
-1. Reliable device-local basket persistence.
-2. Accessible basket drawer/page behaviour for mobile and desktop.
-3. Minimal customer and fulfilment details form.
-4. Boundary validation and abuse/rate-limit strategy for the public mutation.
-5. Atomic server-side creation of customer, order and item snapshots.
-6. Collision-safe human-readable Zadok order reference.
-7. Tailored, encoded WhatsApp message and explicit handoff.
-8. Confirmation/next-step state that clearly says availability and payment are not yet confirmed.
-9. Failure, retry and idempotency behaviour.
-10. Focused tests and responsive verification.
+Database-backed limits allow 30 new attempts/minute globally and 5 per phone/15 minutes; accepted matching retries bypass those counters. The RPC computes phone/payload hashes itself: direct anon callers cannot defeat the limits by changing supplied HMAC arguments. The API HMAC is not authorization. A short global transaction lock coordinates requests. A distributed attacker can exhaust the global budget; stronger operational edge/bot protection remains a possible follow-up. Private rate records contain no raw phone/IP data.
 
-Do not start the staff dashboard until this vertical slice is designed and implemented cleanly, unless the user explicitly changes the priority.
+The route needs a stable server-only `ORDER_REQUEST_HASH_SECRET` and the existing public Supabase URL/key. Missing configuration fails closed with 503; preserve the secret across deployments for pending retries. It still needs deployment configuration before route submissions can be enabled. No service-role key is required for ordering.
+
+Session recovery survives reloads but ends when the tab is closed. Submitted records remain in Postgres. Unknown outcomes retain the original payload/key even if the basket changes later. The accepted-reference status is deliberately inline; the WhatsApp handoff and polished confirmation screen are the next increment.
+
+### Verification and reproduction
+
+- All 28 Vitest tests passed, including component checks and real isolated PostgreSQL transaction/concurrency tests with `ORDER_TEST_DATABASE_URL`. Forced reference collision, delivery constraints, immutable snapshots and retry behavior ran against Postgres.
+- `npm run lint` and `npm run build` passed.
+- Real Chromium browser checks at 360x800, 768x1024 and 1440x900: progressive navigation, conditional address, validation, retained values on back navigation, full-height mobile scrolling, visible feedback and sticky action, and the actual route 503/retry state. Screenshots were visually inspected; no uncaught browser errors were reported. Successful creation was verified in local DB integration tests, not by inserting production test orders.
+- Live Supabase security/performance advisors: expected [anon-executable definer RPC warning](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable); INFO notices for private RLS tables with no policies and unused indexes. No public access was opened to silence these notices.
+- Node 20 emits a Supabase deprecation warning; use a supported newer Node runtime in deployment.
+
+For DB tests, set `ORDER_TEST_DATABASE_URL` to a local PostgreSQL admin connection, with `psql` on PATH or `PSQL_BIN` configured. The suite creates a unique database, bootstraps minimal Supabase roles/auth schema, applies all committed migrations, tests and drops only its database. Without the variable, DB tests explicitly skip. This harness does not emulate the entire hosted Supabase stack.
+
+## Exact next task for review
+
+Review the request contract, forward migration, anonymous grants/rate limits, immutable snapshots, conditional address, reference collision handling and retry/drawer tests. After approval, implement the configured WhatsApp message/handoff and truthful confirmation/next-step experience. Payments, reservations, customer accounts and staff-dashboard work remain outside this increment.
 
 ## Information still intentionally unresolved
 

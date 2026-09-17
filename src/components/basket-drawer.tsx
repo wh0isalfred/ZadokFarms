@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
 import { OrderRequestForm } from "@/components/order-request-form";
@@ -15,30 +15,40 @@ type BasketDrawerProps = {
 };
 
 export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDecrease }: BasketDrawerProps) {
+  const [step, setStep] = useState<"review" | "details">("review");
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const closeDrawer = useEffectEvent(onClose);
   const drawerRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);
   const items = products.filter((product) => (quantities[product.id] ?? 0) > 0);
   const total = items.reduce((sum, product) => sum + product.price * quantities[product.id], 0);
 
+  const detailsOpen = step === "details" && items.length > 0;
+  useEffect(() => {
+    if (!items.length || !open) queueMicrotask(() => setStep("review"));
+  }, [items.length, open]);
+
   useEffect(() => {
     if (!open) return;
     previouslyFocusedElement.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.classList.add("drawer-open");
+    document.documentElement.classList.add("drawer-open");
     closeButtonRef.current?.focus();
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") closeDrawer();
       if (event.key !== "Tab") return;
 
       const focusableElements = drawerRef.current?.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
-      if (!focusableElements?.length) return;
+      const visibleElements = Array.from(focusableElements ?? []).filter((element) => !element.closest("[hidden]") && !element.matches(":disabled"));
+      if (!visibleElements.length) return;
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-      if (event.shiftKey && document.activeElement === firstElement) {
+      const firstElement = visibleElements[0];
+      const lastElement = visibleElements[visibleElements.length - 1];
+      if (event.shiftKey && (document.activeElement === firstElement || document.activeElement === headingRef.current)) {
         event.preventDefault();
         lastElement.focus();
       } else if (!event.shiftKey && document.activeElement === lastElement) {
@@ -49,21 +59,25 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
     document.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.classList.remove("drawer-open");
+      document.documentElement.classList.remove("drawer-open");
       document.removeEventListener("keydown", closeOnEscape);
       previouslyFocusedElement.current?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
+
+  useEffect(() => { if (open) headingRef.current?.focus(); }, [detailsOpen, open]);
 
   if (!open) return null;
 
   return (
     <div className="drawer-layer open">
       <button className="drawer-backdrop" type="button" onClick={onClose} aria-label="Close your basket" />
-      <aside className="basket-drawer" aria-describedby={items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
+      <aside className="basket-drawer" aria-describedby={detailsOpen ? "order-details-note" : items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
         <div className="drawer-heading">
-          <div><p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title">Your basket</h2></div>
+          <div><p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title" ref={headingRef} tabIndex={-1}>{detailsOpen ? "Request details" : "Your basket"}</h2></div>
           <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close your basket">×</button>
         </div>
+        <div className="drawer-step" hidden={detailsOpen}>
         {items.length === 0 ? (
           <div className="empty-basket"><p>Your basket is empty.</p><button type="button" onClick={onClose}>Continue shopping</button></div>
         ) : (
@@ -82,9 +96,14 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
             </div>
             <div className="basket-summary"><span>Estimated total</span><strong>{formatNaira(total)}</strong></div>
             <p className="basket-note" id="basket-request-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
-            <OrderRequestForm products={products} quantities={quantities} />
+            <button className="checkout-button" type="button" onClick={() => setStep("details")}>Request details</button>
           </>
         )}
+        </div>
+        <div className="drawer-step" hidden={!detailsOpen}>
+          <button className="request-back" type="button" onClick={() => setStep("review")}>Back to basket</button>
+          <OrderRequestForm products={products} quantities={quantities} active={detailsOpen} />
+        </div>
       </aside>
     </div>
   );

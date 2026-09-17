@@ -14,7 +14,7 @@ async function sql(query: string) {
   const { stdout } = await exec(process.env.PSQL_BIN ?? "psql", [databaseUrl!, "-X", "-q", "-t", "-A", "-v", "ON_ERROR_STOP=1", "-c", query]);
   return stdout.trim();
 }
-const payload = { details: { name: "Integration Customer", phone: "+2348012345678", fulfilment: "delivery" }, items: [{ slug: "cucumber", quantity: 2, expectedPrice: 3200, expectedName: "Cucumber", expectedUnit: "5 kg" }] };
+const payload = { details: { name: "Integration Customer", phone: "+2348012345678", fulfilment: "delivery", delivery_address: "12 Test Street, Area, Port Harcourt, near the school", note: "Please call first." }, items: [{ slug: "cucumber", quantity: 2, expectedPrice: 3200, expectedName: "Cucumber", expectedUnit: "5 kg" }] };
 const hash = "a".repeat(64);
 function call(key: string, body = payload, fingerprint = hash, phone = "b".repeat(64)) {
   return `select public.submit_order_request('${key}', ${literal(JSON.stringify(body))}::jsonb, '${fingerprint}', '${phone}');`;
@@ -48,14 +48,14 @@ describe.skipIf(!adminUrl)("PostgreSQL order transaction", () => {
   });
   it("atomically snapshots live items, records status and retries without another customer", async () => {
     const key = randomUUID();
-    const output = await sql(`begin; set local role service_role; ${call(key)} ${call(key)}
+    const output = await sql(`begin; set local role anon; ${call(key)} ${call(key)} reset role;
       select json_build_object('orders', (select count(*) from public.order_requests), 'customers', (select count(*) from public.customers),
         'items', (select count(*) from public.order_items), 'events', (select count(*) from public.order_status_events),
         'stock', (select count(*) from public.inventory_adjustments)); rollback;`);
     const [first, second, counts] = output.split(/\r?\n/).map((line) => JSON.parse(line));
     expect(first).toEqual(second);
     expect(first.items).toEqual([{ name: "Cucumber", unit: "5 kg", price: 3200, quantity: 2 }]);
-    expect(first.reference).toMatch(/^ZF-\d{8}-[A-F0-9]{8}$/);
+    expect(first.reference).toMatch(/^ZF-\d{8}-[2-9A-HJKMNP-Z]{6}$/);
     expect(counts).toEqual({ orders: 1, customers: 1, items: 1, events: 1, stock: 0 });
   });
 
@@ -90,8 +90,8 @@ describe.skipIf(!adminUrl)("PostgreSQL order transaction", () => {
     expect(lines[6]).toEqual(lines[0]);
   });
 
-  it("denies public execution and protects immutable snapshots", async () => {
-    expect(await sql("select has_function_privilege('anon', 'public.submit_order_request(uuid,jsonb,text,text)', 'EXECUTE') or has_function_privilege('authenticated', 'public.submit_order_request(uuid,jsonb,text,text)', 'EXECUTE');")).toBe("f");
+  it("allows only anon execution and protects immutable snapshots", async () => {
+    expect(await sql("select not has_function_privilege('anon', 'public.submit_order_request(uuid,jsonb,text,text)', 'EXECUTE') or has_function_privilege('authenticated', 'public.submit_order_request(uuid,jsonb,text,text)', 'EXECUTE');")).toBe("f");
     const output = await sql(`begin; ${call(randomUUID())}
       do $$ begin begin update public.order_items set unit_price_ngn = 1; raise exception 'Expected immutable snapshot'; exception when check_violation then null; end;
       begin delete from public.order_items; raise exception 'Expected immutable snapshot'; exception when check_violation then null; end; end $$;
@@ -99,10 +99,62 @@ describe.skipIf(!adminUrl)("PostgreSQL order transaction", () => {
     expect(output.split(/\r?\n/)[1]).toBe("3200");
   });
 
+  it("rejects unavailable, unpublished, empty and malformed requests as anon", async () => {
+    for (const change of ["update public.products set status = 'unavailable' where slug='cucumber';", "update public.products set published_at = null where slug='cucumber';", "update public.product_categories set published=false;"]) {
+      const output = await sql(`begin; ${change} set local role anon; ${call(randomUUID())} rollback;`);
+      expect(JSON.parse(output).code).toBe("catalogue_changed");
+    }
+    for (const items of [[], [{ ...payload.items[0], quantity: -1 }], [{ ...payload.items[0], quantity: 1.5 }]]) {
+      expect(JSON.parse(await sql(`begin; set local role anon; ${call(randomUUID(), { ...payload, items })} rollback;`)).code).toBeTruthy();
+    }
+  });
+
+  it("snapshots the address/note and enforces delivery at the table boundary", async () => {
+    const output = await sql(`begin; ${call(randomUUID())}
+      select json_build_object('address', delivery_address, 'note', customer_note, 'key', idempotency_key is not null) from public.order_requests;
+      do $$ begin
+        begin update public.order_requests set delivery_address=null; raise exception 'Expected address constraint'; exception when check_violation then null; end;
+        begin update public.order_requests set delivery_address='  '; raise exception 'Expected address constraint'; exception when check_violation then null; end;
+        begin update public.order_requests set delivery_address=repeat('x',501); raise exception 'Expected address constraint'; exception when check_violation then null; end;
+      end $$; rollback;`);
+    expect(JSON.parse(output.split(/\r?\n/)[1])).toEqual({ address: payload.details.delivery_address, note: payload.details.note, key: true });
+    expect(JSON.parse(await sql(`begin; set local role anon; ${call(randomUUID(), { ...payload, details: { ...payload.details, delivery_address: " " } })} rollback;`)).code).toBe("invalid_request");
+  });
+
+  it("does not trust a reused fingerprint for changed input or caller phone hashes for limits", async () => {
+    const key = randomUUID();
+    const output = await sql(`begin; set local role anon; ${call(key)} ${call(key, { ...payload, details: { ...payload.details, name: "Different Customer" } })}
+      ${Array.from({ length: 5 }, (_, index) => call(randomUUID(), payload, hash, String(index).repeat(64))).join("\n")} rollback;`);
+    const lines = output.split(/\r?\n/).map((line) => JSON.parse(line));
+    expect(lines[1].code).toBe("key_conflict");
+    expect(lines.at(-1).code).toBe("rate_limited");
+  });
+
+  it("returns original snapshots after catalogue edits and creates new customers for new keys", async () => {
+    const key = randomUUID();
+    const output = await sql(`begin; ${call(key)} update public.products set name='New cucumber', price_ngn=9999, selling_unit='crate' where slug='cucumber'; ${call(key)}
+      ${call(randomUUID(), { ...payload, items: [{ ...payload.items[0], expectedName: "New cucumber", expectedPrice: 9999, expectedUnit: "crate" }] })}
+      select count(*) from public.customers; rollback;`);
+    const lines = output.split(/\r?\n/);
+    expect(JSON.parse(lines[1])).toEqual(JSON.parse(lines[0]));
+    expect(JSON.parse(lines[2]).items[0]).toEqual({ name: "New cucumber", price: 9999, unit: "crate", quantity: 2 });
+    expect(lines[3]).toBe("2");
+  });
+
+  it("retries an actual reference collision safely", async () => {
+    const output = await sql(`begin;
+      do $$ begin perform setseed(0.42); end $$; ${call(randomUUID())}
+      do $$ begin perform setseed(0.42); end $$; ${call(randomUUID())}
+      select count(distinct reference) from public.order_requests; rollback;`);
+    const lines = output.split(/\r?\n/);
+    expect(JSON.parse(lines[0]).reference).not.toBe(JSON.parse(lines[1]).reference);
+    expect(lines[2]).toBe("2");
+  });
+
   it("deduplicates concurrent HTTP submissions through the real RPC", async () => {
     const key = randomUUID();
     const input = { key, ...payload };
-    const gateway = async (_input: unknown, fingerprint: string, phoneHash: string) => ({ data: JSON.parse(await sql(`set role service_role; ${call(key, payload, fingerprint, phoneHash)}`)), error: null });
+    const gateway = async (_input: unknown, fingerprint: string, phoneHash: string) => ({ data: JSON.parse(await sql(`set role anon; ${call(key, payload, fingerprint, phoneHash)}`)), error: null });
     const requests = Array.from({ length: 4 }, () => handleOrderRequest(new Request("https://farm.test/api/order-requests", { method: "POST", headers: { origin: "https://farm.test", "content-type": "application/json" }, body: JSON.stringify(input) }), gateway, "test-secret"));
     const results = await Promise.all(requests);
     expect(results.map((result) => result.status)).toEqual([200, 200, 200, 200]);

@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -182,9 +182,11 @@ export type Database = {
           created_at: string
           customer_id: string
           customer_note: string | null
+          delivery_address: string | null
           fulfilled_at: string | null
           fulfilment_method: string | null
           id: string
+          idempotency_key: string | null
           internal_note: string | null
           reference: string
           requested_at: string
@@ -198,9 +200,11 @@ export type Database = {
           created_at?: string
           customer_id: string
           customer_note?: string | null
+          delivery_address?: string | null
           fulfilled_at?: string | null
           fulfilment_method?: string | null
           id?: string
+          idempotency_key?: string | null
           internal_note?: string | null
           reference: string
           requested_at?: string
@@ -214,9 +218,11 @@ export type Database = {
           created_at?: string
           customer_id?: string
           customer_note?: string | null
+          delivery_address?: string | null
           fulfilled_at?: string | null
           fulfilment_method?: string | null
           id?: string
+          idempotency_key?: string | null
           internal_note?: string | null
           reference?: string
           requested_at?: string
