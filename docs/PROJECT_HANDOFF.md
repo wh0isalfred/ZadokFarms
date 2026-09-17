@@ -81,7 +81,7 @@ Committed migrations:
 - `20260916201607_commerce_foundation_advisor_fixes.sql`
 - `20260916201850_allow_public_catalogue_staff_check.sql`
 
-The catalogue is seeded with the nine concept products and reads from Supabase server-side, with the former static list retained only as a temporary resilience fallback.
+The catalogue is seeded with the nine concept products and reads from Supabase server-side. Static concept prices are no longer used as a runtime fallback; see the catalogue freshness increment below.
 
 ## Completed ordering increments
 
@@ -123,6 +123,30 @@ Session recovery survives reloads but ends when the tab is closed. Submitted rec
 - Node 20 emits a Supabase deprecation warning; use a supported newer Node runtime in deployment.
 
 For DB tests, set `ORDER_TEST_DATABASE_URL` to a local PostgreSQL admin connection, with `psql` on PATH or `PSQL_BIN` configured. The suite creates a unique database, bootstraps minimal Supabase roles/auth schema, applies all committed migrations, tests and drops only its database. Without the variable, DB tests explicitly skip. This harness does not emulate the entire hosted Supabase stack.
+
+## Public catalogue rendering and freshness increment
+
+Implemented on `perf/public-catalogue`, based on request-boundary commit `13e631d477970de3d774df308b75fae62769ddde`. At task start, fetched `origin/main` remained `d1c8002a209ae0309820b4c812c1b1d9c9bcfb38`, three commits behind that base. The order-request contract, API, migrations and generated types are unchanged.
+
+- `src/lib/supabase/catalogue.ts` creates a cookie-free publishable-key client with session persistence/refresh/URL detection disabled. Its fetch explicitly uses `no-store`. `server.ts` remains the separate cookie-aware client for future staff/auth work.
+- The homepage explicitly stays dynamic, including when configuration is missing. Removing `cookies()` alone would not establish freshness: Next.js 16's default fetch can run at build-time on a prerendered route. No shared data cache, ISR TTL, Cache Components migration or staff invalidation endpoint was added.
+- `loading.tsx` streams a small accessible loading state while the current catalogue read completes. This improves initial feedback, not database latency. Published-product filters and selected fields remain unchanged.
+- Missing configuration or a failed query displays an unavailable message and a full-document reload form. It does not show concept prices or mount an empty basket, preserving device basket data through outages. A successful empty query has distinct empty-catalogue copy. Streaming may already have sent HTTP 200 before an error result arrives.
+- A committed catalogue update becomes visible on the next successful server read after that commit, without redeployment or TTL delay. There is no stale-while-revalidate response or retained last-good result. Supabase's built-in transient GET retries still apply. An already-open page, browser history restoration or reused client navigation remains a snapshot until a new server render/full reload; no polling or automatic background refresh was introduced. Updates racing an in-flight read can require another reload.
+- The visible notice now explains that prices/availability may change and Zadok confirms fulfilment/payment afterward, including on mobile. The unchanged order RPC revalidates current published/requestable products, quantities and expected values and resolves current snapshots. Displayed availability never guarantees stock or fulfilment.
+
+### Evidence and reproduction
+
+Measurements used local production `next build` / `next start`, real `.env` Supabase URL/publishable key and nine live catalogue products. They are local samples, not deployment/CDN benchmarks:
+
+- Baseline build: `/` dynamic; no homepage entry in the prerender manifest. Five sequential GETs: cold TTFB/full response 3.839/3.842 seconds; warm TTFB 264-351 ms and full responses 265-352 ms.
+- Changed build: `/` still dynamic, absent from the prerender manifest. Initial comparison: warm TTFB 33-59 ms, full responses 276-400 ms. Final-build five-GET sample after browser checks: TTFB 43/29/33/28/23 ms, full responses 1848/324/345/360/252 ms. The variation reinforces that streaming does not eliminate upstream latency.
+- Both versions returned `Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate`. Temporary process-level fetch instrumentation counted one real Supabase catalogue read per successful document request, including repeated requests. No credentials were logged; instrumentation is outside the repository.
+- `npm run lint` and `npm run build` passed. All 31 tests passed with `ORDER_TEST_DATABASE_URL` set, including the existing 11 isolated local PostgreSQL tests. Three new catalogue tests exercise the real Supabase client against mocked HTTP responses: explicit no-store/no cookie, publication filters, successive price/unit/status changes, error recovery and empty/missing-configuration behavior. These catalogue tests are not hosted database integration coverage.
+- Real Chromium checks of the final build at 360x800, 768x1024 and 1440x900; screenshots visually inspected. Verified current nine-product rendering and readable freshness notice. No uncaught browser errors were reported.
+- Temporary local upstream response interception verified: an open page retained Habanero's original 4500/available snapshot; a full reload showed simulated 5000/unavailable and removed its add action; restoring live responses restored 4500/available. Also verified an empty result, failure/reload recovery, retained basket quantity through failure, and visible loading feedback under an injected three-second delay. No production products or orders were mutated.
+
+No dependency, database schema or environment contract changes. Node 20 still emits the existing Supabase deprecation warning. The catalogue needs the existing real public environment variables to display products. Cross-request caching should be reconsidered only with an approved freshness window or a staff update path that reliably invalidates it. Review this increment separately from the request-boundary base; WhatsApp handoff remains outside this work.
 
 ## Exact next task for review
 

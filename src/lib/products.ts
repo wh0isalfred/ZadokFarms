@@ -1,5 +1,5 @@
-import { products as fallbackProducts, type Product } from "@/data/products";
-import { createClient } from "@/lib/supabase/server";
+import type { Product } from "@/data/products";
+import { createCatalogueClient } from "@/lib/supabase/catalogue";
 
 const catalogueCategories = new Set<Product["category"]>([
   "Vegetables",
@@ -14,15 +14,15 @@ function toCategory(value: string | undefined): Product["category"] {
     : "Vegetables";
 }
 
-export async function getPublishedProducts(): Promise<Product[]> {
+export async function getPublishedProducts(): Promise<Product[] | null> {
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   ) {
-    return fallbackProducts;
+    return null;
   }
 
-  const supabase = await createClient();
+  const supabase = createCatalogueClient();
   const { data, error } = await supabase
     .from("products")
     .select(
@@ -34,7 +34,7 @@ export async function getPublishedProducts(): Promise<Product[]> {
 
   if (error) {
     console.error("Unable to load the produce catalogue", error.message);
-    return fallbackProducts;
+    return null;
   }
 
   return data.map((product) => ({
