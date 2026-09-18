@@ -4,7 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { BasketDrawer } from "@/components/basket-drawer";
 import { useBasket } from "@/components/use-basket";
 import { ArrowIcon, ChevronIcon, LocationIcon, SearchIcon } from "@/components/icons";
-import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter, FieldLines } from "@/components/home-sections";
+import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
@@ -58,14 +58,13 @@ export function Storefront({ products }: { products: Product[] }) {
       <div className="page-shell" id="top">
         <SiteHeader basketCount={basketCount} onBasketOpen={() => setBasketOpen(true)} onSearchOpen={() => setShowSearch((open) => !open)} />
         <main>
-          <div className="provenance"><LocationIcon /><span>Grown in Omudioga. Available directly from our farm.</span><span className="provenance-location">Omudioga, Rivers State</span></div>
+          <div className="provenance"><LocationIcon /><span>Grown in Omudioga. Available directly from our farm.</span></div>
           <section className={`search-panel ${showSearch ? "open" : ""}`} aria-hidden={!showSearch}>
             <SearchIcon /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search produce" aria-label="Search produce" autoFocus={showSearch} />{query && <button type="button" onClick={() => setQuery("")}>Clear</button>}
           </section>
           <section className="catalogue" id="produce">
-            <FieldLines className="catalogue-lines catalogue-lines-one" />
-            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
             <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices and availability may change. Zadok confirms fulfilment and payment afterward.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
+            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" aria-pressed={category === item} onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
             {visibleProducts.length > 0 ? (
               <div className="product-grid">
                 {visibleProducts.map((product, index) => (

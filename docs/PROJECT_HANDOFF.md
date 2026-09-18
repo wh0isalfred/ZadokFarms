@@ -170,9 +170,20 @@ Implemented on `feat/request-ux` from main `179ae6c0d90bb99db5aaa4b1701835e92153
 - No uncaught browser errors in the complete final flow. The initially used agent-browser executable became unavailable; remaining checks used a temporary Playwright driver with already-installed Chromium, outside the repository. No project dependency or environment contract changed.
 - Limitations: desktop Chromium viewport/keyboard automation is not physical mobile hardware, a real software keyboard, or a screen-reader audit. Location, WhatsApp handoff and a polished receipt remain unimplemented.
 
+## Upper catalogue visual increment
+
+Implemented on `feat/catalogue-opening` from current main `b61a6da6c83d22e40ac54032afcb6c86a04b0fcd`.
+
+- Provenance is visible at every width, followed by a stronger heading, the existing truthful freshness line, then controls and photography. Categories expose their selected state with `aria-pressed` and have 44px targets. Desktop controls remain grouped on the right; tablet controls wrap and mobile categories scroll horizontally.
+- Catalogue entries retain their data/actions and use consistent 4:3 photos, modest radii, wrapping names and aligned full-width actions. Quantity controls use deep green. The artwork behind the opening was removed; lower field-line artwork and all lower homepage sections remain unchanged.
+- Changed files: `src/components/storefront.tsx`, `src/app/globals.css`, `tests/catalogue-ui.test.tsx`, and this document. No ordering, Supabase, migration, generated-type, dependency or environment changes.
+- ESLint and production Next build passed via installed Node CLI entrypoints (Windows npm shims remain unavailable). Homepage remains dynamic with real catalogue environment variables. All 41 tests passed, including the 11 isolated local PostgreSQL regression tests; the new UI test covers content order, selected category semantics and preserved unavailable/limited states.
+- Actual Chromium production-build checks at 320x900, 360x900, 768x900 and 1440x900: nine live products, content/controls/grid order, no horizontal overflow, keyboard category activation/focus outline, category filtering, unavailable action, add/decrease and 44px quantity targets. Screenshots inspected at mobile, tablet and desktop. A delayed-image check at 360x800 confirmed unchanged image bounds before/after loading. Browser-local long-name text injection verified wrapping without action overlap at all four widths; this was a layout stress check, not a production data change. No uncaught browser errors.
+- Limitations: viewport automation is not a physical-device or screen-reader audit. Existing availability/sort buttons remain non-functional placeholders; no new filtering behavior was introduced. Existing 768px header spacing is tight and unchanged because navigation is outside scope. Existing photography is retained, including its source-resolution limitations.
+
 ## Exact next task for review
 
-Review UX Increment A + B against ORDER_REQUEST_UX_PLAN.md: summary source, native radio semantics, footer clearance, browser history, explicit key-conflict recovery and preserved retry behaviour. Review the focused diff from main `179ae6c` and reproduce the documented tests/browser cases. After UX approval, separately authorise the recorded-request confirmation and configured WhatsApp handoff increment. Map/provider/API/schema work remains deferred until the stakeholder's operational/privacy answers justify it; do not implement it as part of this UI review.
+Review the upper catalogue visual increment against the supplied reference direction and the documented responsive checks. Review only its diff from `b61a6da`; ordering remains unchanged. WhatsApp handoff, location work and any navigation/filter functionality changes require separately scoped work.
 
 ## Information still intentionally unresolved
 
