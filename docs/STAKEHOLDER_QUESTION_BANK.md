@@ -44,6 +44,8 @@ These questions matter when Zadok is ready to make delivery, staff tools, and lo
 3. Are delivery eligibility and fees known before a request is submitted, or only after staff review it?
 4. Would storing a customer-selected map location or coordinates help staff fulfil an order? Who should be allowed to see it, and how long should it be retained?
 5. What should happen when a customer cannot find their exact location on a map or has poor location accuracy?
+6. Which pickup location details are approved for public display?
+7. How should customers correct a delivery address after submitting?
 
 ### Orders, stock, and staff workflow
 

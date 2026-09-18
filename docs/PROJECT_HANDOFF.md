@@ -1,6 +1,6 @@
 # Zadok Farm — Project Handoff and Current State
 
-Last updated: 17 September 2026
+Last updated: 18 September 2026
 
 This is the compact continuity document for a fresh Codex or Claude session. Read `AGENTS.md` first; this file records the approved product and current implementation state.
 
@@ -148,9 +148,31 @@ Measurements used local production `next build` / `next start`, real `.env` Supa
 
 No dependency, database schema or environment contract changes. Node 20 still emits the existing Supabase deprecation warning. The catalogue needs the existing real public environment variables to display products. Cross-request caching should be reconsidered only with an approved freshness window or a staff update path that reliably invalidates it. Review this increment separately from the request-boundary base; WhatsApp handoff remains outside this work.
 
+## Order-request UX Increment A + B
+
+Implemented on `feat/request-ux` from main `179ae6c0d90bb99db5aaa4b1701835e9215361bf`. The durable approved plan is [ORDER_REQUEST_UX_PLAN.md](ORDER_REQUEST_UX_PLAN.md). The original design/motion transcript remained unavailable; implementation follows the approved conversation plan and brand principles recorded here and in AGENTS.md.
+
+- Request details now groups contact fields, shows a compact expandable/editable produce summary and uses native radio choice cards for Pickup, Delivery and I need guidance. Existing values/default and conditional address validation are preserved. Ordinary fields remain unboxed; only fulfilment choices are cards.
+- Normal summaries use the current basket. Unresolved attempts use their immutable saved item data, regardless of later basket edits; accepted summaries use server receipt items. Estimates never imply staff-confirmed availability or payment.
+- Full-height mobile layout and a 560px tablet/desktop drawer have a stable header, scrolling body and separate action footer. The footer reserves layout space; trailing content has scroll clearance. Desktop contact fields use the additional width. Reduced-motion rules remain in place.
+- One same-document details history entry preserves Next's history state. First browser Back returns to basket review; subsequent Back proceeds normally. Edit/Back/Close consume the details entry; repeated navigation does not accumulate entries. Forward after closing does not force another traversal or reopen the drawer. Empty basket returns to review without erasing existing retry storage.
+- Only an explicit server `key_conflict` enables Clear saved retry and review details. This replaces that unresolved attempt with its editable details, leaves unrelated storage alone and creates a new key only on the next submit. The explanation states that this does not cancel a previously recorded request. Timeouts/unknown outcomes still retain and retry the exact original payload/key.
+- Rate-limit UI says "wait up to 15 minutes", with no countdown based on the fixed Retry-After header. No server response, route, contract, RPC, migration or database-type change.
+- The two approved pickup-publication/address-correction questions were added to the later operational section of STAKEHOLDER_QUESTION_BANK.md. No business answers were invented.
+
+### Verification for this increment
+
+- ESLint and the production Next build passed. Final verification used installed CLI entrypoints (`node node_modules/eslint/bin/eslint.js`, `node node_modules/next/dist/bin/next build`) after Windows npm/CLI shims became unavailable; the project scripts were not changed. The existing Node 20 Supabase deprecation warning remains.
+- All 40 Vitest tests passed, including all 11 actual isolated local PostgreSQL regression tests after restarting the local test server. Nine added UI/history tests cover live/saved summary source, native radios, separate action structure, Back/repeated navigation/Forward after close, conflict recovery and rate-limit wording. Existing test scenarios remain; select-specific interactions were updated for radios and the new continue label.
+- Real Chromium production-build checks with real catalogue environment variables at 360x800, 768x1024 and 1440x900. Screenshots were visually inspected. Additional 320x640 eight-line basket and 360x500 short-viewport checks passed. Measured footer/body bounds did not overlap; the last content retained approximately 32px clearance above the scrolling body's end.
+- Browser checks passed for delivery validation/focused feedback, native radio arrow keys, reverse-Tab containment, Escape focus restoration, native Back then normal navigation, repeated Edit/continue without extra entries, and reduced-motion preference. Long address/note content remained scrollable.
+- Browser-local API interception verified pending close/reopen, unchanged retry payload after basket edits, explicit conflict recovery/new key, rate-limit feedback and accepted-receipt recovery. No production requests/orders were created. Actual atomic submission correctness is covered by the separate existing local PostgreSQL tests, not these intercepted browser responses.
+- No uncaught browser errors in the complete final flow. The initially used agent-browser executable became unavailable; remaining checks used a temporary Playwright driver with already-installed Chromium, outside the repository. No project dependency or environment contract changed.
+- Limitations: desktop Chromium viewport/keyboard automation is not physical mobile hardware, a real software keyboard, or a screen-reader audit. Location, WhatsApp handoff and a polished receipt remain unimplemented.
+
 ## Exact next task for review
 
-Review the request contract, forward migration, anonymous grants/rate limits, immutable snapshots, conditional address, reference collision handling and retry/drawer tests. After approval, implement the configured WhatsApp message/handoff and truthful confirmation/next-step experience. Payments, reservations, customer accounts and staff-dashboard work remain outside this increment.
+Review UX Increment A + B against ORDER_REQUEST_UX_PLAN.md: summary source, native radio semantics, footer clearance, browser history, explicit key-conflict recovery and preserved retry behaviour. Review the focused diff from main `179ae6c` and reproduce the documented tests/browser cases. After UX approval, separately authorise the recorded-request confirmation and configured WhatsApp handoff increment. Map/provider/API/schema work remains deferred until the stakeholder's operational/privacy answers justify it; do not implement it as part of this UI review.
 
 ## Information still intentionally unresolved
 

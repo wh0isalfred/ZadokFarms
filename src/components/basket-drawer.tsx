@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef } from "react";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
+import { useRequestStep } from "@/components/use-request-step";
 import { OrderRequestForm } from "@/components/order-request-form";
 
 type BasketDrawerProps = {
@@ -15,19 +16,16 @@ type BasketDrawerProps = {
 };
 
 export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDecrease }: BasketDrawerProps) {
-  const [step, setStep] = useState<"review" | "details">("review");
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const closeDrawer = useEffectEvent(onClose);
   const drawerRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);
   const items = products.filter((product) => (quantities[product.id] ?? 0) > 0);
   const total = items.reduce((sum, product) => sum + product.price * quantities[product.id], 0);
 
-  const detailsOpen = step === "details" && items.length > 0;
-  useEffect(() => {
-    if (!items.length || !open) queueMicrotask(() => setStep("review"));
-  }, [items.length, open]);
+  const { detailsOpen, showDetails, showReview } = useRequestStep(open, items.length > 0);
+  const closeDrawer = useEffectEvent(() => { showReview(); onClose(); });
+  function close() { showReview(); onClose(); }
 
   useEffect(() => {
     if (!open) return;
@@ -41,7 +39,7 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
       if (event.key !== "Tab") return;
 
       const focusableElements = drawerRef.current?.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
       );
       const visibleElements = Array.from(focusableElements ?? []).filter((element) => !element.closest("[hidden]") && !element.matches(":disabled"));
       if (!visibleElements.length) return;
@@ -71,15 +69,15 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
 
   return (
     <div className="drawer-layer open">
-      <button className="drawer-backdrop" type="button" onClick={onClose} aria-label="Close your basket" />
+      <button className="drawer-backdrop" type="button" onClick={close} aria-label="Close your basket" />
       <aside className="basket-drawer" aria-describedby={detailsOpen ? "order-details-note" : items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
         <div className="drawer-heading">
-          <div><p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title" ref={headingRef} tabIndex={-1}>{detailsOpen ? "Request details" : "Your basket"}</h2></div>
-          <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close your basket">×</button>
+          <div>{detailsOpen && <button className="request-back" type="button" onClick={showReview}>Back to basket</button>}<p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title" ref={headingRef} tabIndex={-1}>{detailsOpen ? "Request details" : "Your basket"}</h2></div>
+          <button ref={closeButtonRef} type="button" onClick={close} aria-label="Close your basket">×</button>
         </div>
-        <div className="drawer-step" hidden={detailsOpen}>
+        <div className="drawer-step basket-review" hidden={detailsOpen}>
         {items.length === 0 ? (
-          <div className="empty-basket"><p>Your basket is empty.</p><button type="button" onClick={onClose}>Continue shopping</button></div>
+          <div className="empty-basket"><p>Your basket is empty.</p><button type="button" onClick={close}>Continue shopping</button></div>
         ) : (
           <>
             <div className="basket-items">
@@ -94,15 +92,14 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
                 </div>
               ))}
             </div>
-            <div className="basket-summary"><span>Estimated total</span><strong>{formatNaira(total)}</strong></div>
+            <div className="basket-review-action"><div className="basket-summary"><span>Estimated produce subtotal</span><strong>{formatNaira(total)}</strong></div>
             <p className="basket-note" id="basket-request-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
-            <button className="checkout-button" type="button" onClick={() => setStep("details")}>Request details</button>
+            <button className="checkout-button" type="button" onClick={showDetails}>Continue to request details</button></div>
           </>
         )}
         </div>
         <div className="drawer-step" hidden={!detailsOpen}>
-          <button className="request-back" type="button" onClick={() => setStep("review")}>Back to basket</button>
-          <OrderRequestForm products={products} quantities={quantities} active={detailsOpen} />
+          <OrderRequestForm products={products} quantities={quantities} active={detailsOpen} onEditBasket={showReview} />
         </div>
       </aside>
     </div>
