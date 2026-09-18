@@ -182,9 +182,11 @@ export type Database = {
           created_at: string
           customer_id: string
           customer_note: string | null
+          delivery_address: string | null
           fulfilled_at: string | null
           fulfilment_method: string | null
           id: string
+          idempotency_key: string | null
           internal_note: string | null
           reference: string
           requested_at: string
@@ -198,9 +200,11 @@ export type Database = {
           created_at?: string
           customer_id: string
           customer_note?: string | null
+          delivery_address?: string | null
           fulfilled_at?: string | null
           fulfilment_method?: string | null
           id?: string
+          idempotency_key?: string | null
           internal_note?: string | null
           reference: string
           requested_at?: string
@@ -214,9 +218,11 @@ export type Database = {
           created_at?: string
           customer_id?: string
           customer_note?: string | null
+          delivery_address?: string | null
           fulfilled_at?: string | null
           fulfilment_method?: string | null
           id?: string
+          idempotency_key?: string | null
           internal_note?: string | null
           reference?: string
           requested_at?: string
@@ -465,7 +471,15 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      submit_order_request: {
+        Args: {
+          p_fingerprint: string
+          p_key: string
+          p_payload: Json
+          p_phone_hash: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       inventory_adjustment_reason:
@@ -657,4 +671,3 @@ export const Constants = {
     },
   },
 } as const
-
