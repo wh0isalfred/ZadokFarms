@@ -67,7 +67,10 @@ describe("progressive order drawer", () => {
     await submit();
     expect(fetcher).not.toHaveBeenCalled();
     expect(document.getElementById("order-address")?.getAttribute("aria-invalid")).toBe("true");
-    expect(document.activeElement?.getAttribute("role")).toBe("alert");
+    expect(document.activeElement?.id).toBe("order-address");
+    expect(document.getElementById("order-address-error")?.textContent).toBe("Add a delivery address so Zadok can review the request.");
+    await fill("order-address", "12 Test Street");
+    expect(document.getElementById("order-address-error")).toBeNull();
     await fill("order-fulfilment", "pickup");
     expect(document.getElementById("order-address")).toBeNull();
   });
@@ -115,6 +118,61 @@ describe("progressive order drawer", () => {
 });
 
 describe("request UX increment", () => {
+  it("prioritises field focus when basket and contact validation fail together", async () => {
+    const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
+    await render({ cucumber: 10000 }); await click("Continue to request details");
+    await submit();
+    expect(document.activeElement?.id).toBe("order-name");
+    expect(document.querySelector(".request-feedback")?.textContent).toContain("Your basket needs review");
+    await fill("order-name", "Test Customer"); await submit();
+    expect(document.activeElement?.id).toBe("order-phone");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("focuses invalid contact fields in order and clears only a corrected field's error", async () => {
+    const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
+    await render(); await click("Continue to request details");
+    await fill("order-fulfilment", "delivery");
+    await submit();
+    expect(document.activeElement?.id).toBe("order-name");
+    expect(document.getElementById("order-name-error")?.textContent).toBe("Enter the name we should use for this request.");
+    expect(document.getElementById("order-phone-error")?.textContent).toBe("Enter a WhatsApp number with country code.");
+    expect(document.querySelector(".request-feedback")?.textContent).toBe("");
+    expect(document.body.textContent).not.toContain("Check the highlighted details and your basket");
+    expect(document.getElementById("order-name")?.getAttribute("aria-describedby")).toBe("order-name-error");
+    expect(document.querySelectorAll('.field-error[role="alert"], .field-error[aria-live]')).toHaveLength(0);
+    await fill("order-name", "A");
+    expect(document.getElementById("order-name-error")).not.toBeNull();
+    await fill("order-name", "Test Customer");
+    expect(document.getElementById("order-name-error")).toBeNull();
+    expect(document.getElementById("order-phone-error")).not.toBeNull();
+    expect(document.getElementById("order-address-error")).not.toBeNull();
+    await submit();
+    expect(document.activeElement?.id).toBe("order-phone");
+    await fill("order-phone", "+2348012345678");
+    expect(document.getElementById("order-phone-error")).toBeNull();
+    expect(document.getElementById("order-address-error")).not.toBeNull();
+    await submit();
+    expect(document.activeElement?.id).toBe("order-address");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("keeps basket imagery, labelled quantity controls and the review action outside the scroll body", async () => {
+    await render();
+    const row = document.querySelector(".basket-row")!;
+    const image = row.querySelector("img")!;
+    expect(image.alt).toBe("Cucumber");
+    expect(image.src).toContain("cucumber.jpg");
+    expect(row.querySelector('[aria-label="Remove one Cucumber"]')).not.toBeNull();
+    expect(row.querySelector('[aria-label="Add another Cucumber"]')).not.toBeNull();
+    expect(row.querySelector('output[aria-live="polite"]')?.textContent).toBe("2");
+    expect(row.querySelector(".basket-line-total")?.textContent).toContain("6,400");
+    const items = document.querySelector(".basket-items")!;
+    const action = document.querySelector(".basket-review-action")!;
+    expect(items.contains(action)).toBe(false);
+    expect(items.nextElementSibling).toBe(action);
+  });
+
   it("shows the live basket until an attempt is saved, then keeps that immutable summary", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
     await render(); await click("Continue to request details");

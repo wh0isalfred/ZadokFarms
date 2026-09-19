@@ -206,3 +206,20 @@ Represent unresolved operational values as safe configuration/admin content only
 5. Confirm whether this AI is the implementer or reviewer for the task.
 6. Keep the change within the named milestone.
 7. Verify, commit and hand off with concrete evidence.
+
+## Basket and request-form refinement — 19 September 2026
+
+Implemented on `feat/basket-request-refinement` from fetched main `db96b29`. UI and client validation only; no Supabase, migration, generated type, route/RPC, idempotency, WhatsApp, location, payment, stock, account or lower-homepage changes. No dependency or environment changes.
+
+- Client validation renders the approved inline copy, scrolls only the request body and focuses the first invalid visible field in contact/address order. The offset reserves space for the inline error on short screens. Correcting a field clears only its own error; leaving Delivery removes its inapplicable address error while retaining the draft. The valid default/restored native radio selection cannot be missing. Existing schema rules remain authoritative.
+- Focus and associated descriptions announce field errors without additional live alerts. The generic bottom client-validation message is removed; whole-request feedback and recovery remain intact.
+- Basket rows use existing product imagery with fixed 64px thumbnails, readable unit prices, labelled 44px quantity controls, polite quantity output and line estimates. Rows remain unboxed.
+- Both action shelves remain siblings of scrolling content, with subtle dividers, 24px space above their primary buttons and 20px bottom padding plus the safe-area inset. Fields use warm surfaces and visible focus; the optional note stays visible and secondary. Current, saved-attempt and receipt summary sources are unchanged.
+
+Verification: `npm.cmd run lint` and `npm.cmd run build` passed. `npm.cmd test`: 33 passed; 11 isolated database tests skipped because `ORDER_TEST_DATABASE_URL` was not configured. Independent review identified and resolved combined basket/contact validation stealing field focus; a regression and production-browser check at all four sizes now cover it. New tests cover ordered field focus, correction isolation, approved copy, no generic bottom validation, imagery, quantity semantics and separate review actions. Existing retry, pending, key-conflict, saved summary, receipt, rate-limit and Back/Forward coverage passed.
+
+Actual local production-build Chromium checks at 360x800, 768x1024, 1440x900 and 360x500 covered empty submission, sequential corrections, conditional address focus, keyboard quantity/radio controls and focus trapping, long product names, long address/note drafts and footer clearance. Images decoded successfully. Screenshots were inspected at mobile, tablet, desktop and short-mobile sizes. Browser interception covered pending close/reopen, immutable retries after basket edits, explicit conflict recovery/new key, rate limiting and a recorded receipt; no production requests were created. History Back and repeated Edit navigation were also checked. No uncaught browser errors were reported.
+
+Limitations: browser viewport automation is not a physical-device, virtual-keyboard or screen-reader audit; nonzero device safe-area insets were not emulated. Database tests were not run in this increment. Browser submissions used intercepted responses, not live order creation. The original design transcript remains unavailable. The agent-browser launcher failed to establish its CDP connection, so verification used the existing local Playwright/Chromium harness without adding project dependencies.
+
+Changed files: `src/components/basket-drawer.tsx`, `src/components/order-request-form.tsx`, `src/app/globals.css`, `tests/order-drawer.test.tsx`, and this handoff. Next step: review this refinement against main, then merge through the normal review process; no merge is included in this task.

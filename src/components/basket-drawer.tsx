@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef } from "react";
+import Image from "next/image";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
 import { useRequestStep } from "@/components/use-request-step";
@@ -83,11 +84,15 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
             <div className="basket-items">
               {items.map((product) => (
                 <div className="basket-row" key={product.id}>
-                  <div><strong>{product.name}</strong><span>{formatNaira(product.price)} / {product.unit}</span></div>
+                  <Image className="basket-thumbnail" src={product.image} alt={product.imageAlt ?? product.name} width={64} height={64} />
+                  <div className="basket-product"><strong>{product.name}</strong><span>{formatNaira(product.price)} / {product.unit}</span></div>
+                  <div className="basket-row-actions">
                   <div className="mini-stepper" aria-label={`${product.name} quantity`}>
                     <button type="button" onClick={() => onDecrease(product.id)} aria-label={`Remove one ${product.name}`}>−</button>
                     <output aria-live="polite">{quantities[product.id]}</output>
                     <button type="button" onClick={() => onAdd(product.id)} aria-label={`Add another ${product.name}`}>+</button>
+                  </div>
+                  <strong className="basket-line-total"><span className="sr-only">Line estimate: </span>{formatNaira(product.price * quantities[product.id])}</strong>
                   </div>
                 </div>
               ))}

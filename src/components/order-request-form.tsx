@@ -5,7 +5,7 @@ import { z } from "zod";
 import { RequestSummary } from "@/components/request-summary";
 import { FulfilmentChoices } from "@/components/fulfilment-choices";
 import type { Product } from "@/data/products";
-import { orderRequestSchema, receiptSchema, type OrderRequest, type OrderReceipt } from "@/lib/orders/contract";
+import { orderDetailsSchema, orderRequestSchema, receiptSchema, type OrderRequest, type OrderReceipt } from "@/lib/orders/contract";
 
 const draftSchema = z.object({
   name: z.string().max(120), phone: z.string().max(30),
@@ -14,6 +14,11 @@ const draftSchema = z.object({
 });
 const emptyDetails: z.infer<typeof draftSchema> = { name: "", phone: "", fulfilment: "to_confirm", delivery_address: "", note: "" };
 const STORAGE_KEY = "zadok-request-attempt-v1";
+const fieldCopy: Record<string, string> = {
+  "details.name": "Enter the name we should use for this request.",
+  "details.phone": "Enter a WhatsApp number with country code.",
+  "details.delivery_address": "Add a delivery address so Zadok can review the request.",
+};
 
 export function OrderRequestForm({ products, quantities, active, onEditBasket }: { products: Product[]; quantities: Record<string, number>; active: boolean; onEditBasket: () => void }) {
   const [details, setDetails] = useState(emptyDetails);
@@ -26,6 +31,22 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
   const [errors, setErrors] = useState<Record<string, string>>({});
   const busy = useRef(false);
   const feedback = useRef<HTMLParagraphElement>(null);
+  const scrollRegion = useRef<HTMLDivElement>(null);
+  const focusInvalid = useRef(false);
+
+  useEffect(() => {
+    if (!active || !focusInvalid.current) return;
+    focusInvalid.current = false;
+    // DOM order is name, phone, native fulfilment radios, conditional address, note.
+    // Focus announces the associated inline description without a second live alert.
+    const region = scrollRegion.current;
+    const field = region?.querySelector<HTMLElement>('[aria-invalid="true"]:not(:disabled)');
+    if (!region || !field) return;
+    const errorHeight = field.nextElementSibling?.getBoundingClientRect().height ?? 0;
+    const topSpace = Math.max(8, Math.min(56, region.clientHeight - field.offsetHeight - errorHeight - 16));
+    region.scrollTo?.({ top: region.scrollTop + field.getBoundingClientRect().top - region.getBoundingClientRect().top - topSpace, behavior: "instant" });
+    field.focus({ preventScroll: true });
+  }, [active, errors]);
 
   useEffect(() => {
     let active = true;
@@ -51,6 +72,8 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
 
   useEffect(() => {
     if (active && (message || receipt)) {
+      // A basket rejection can coexist with contact errors; field focus takes priority.
+      if (!receipt && scrollRegion.current?.querySelector('[aria-invalid="true"]:not(:disabled)')) return;
       feedback.current?.focus({ preventScroll: true });
       feedback.current?.scrollIntoView?.({ block: "center", behavior: "instant" });
     }
@@ -58,6 +81,13 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
 
   function updateDetails(next: typeof details) {
     setDetails(next);
+    const checked = orderDetailsSchema.safeParse(next);
+    const invalid = new Set(checked.success ? [] : checked.error.issues.map((issue) => `details.${String(issue.path[0])}`));
+    setErrors((current) => Object.fromEntries(Object.entries(current).filter(([key]) => {
+      const field = key.slice("details.".length) as keyof typeof details;
+      return !(next[field] !== details[field] && !invalid.has(key)) &&
+        !(key === "details.delivery_address" && next.fulfilment !== "delivery");
+    })));
     try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ draft: next })); }
     catch { /* Submission will fail closed if retry storage is unavailable. */ }
   }
@@ -96,8 +126,13 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       })),
     });
     if (!parsed.success) {
-      setErrors(Object.fromEntries(parsed.error.issues.map((issue) => [issue.path.join("."), issue.message])));
-      setMessage("Check the highlighted details and your basket.");
+      focusInvalid.current = true;
+      setErrors(Object.fromEntries(parsed.error.issues.map((issue) => {
+        const key = issue.path.join(".");
+        return [key, issue.code === "too_big" ? issue.message : fieldCopy[key] ?? issue.message];
+      })));
+      setMessage(parsed.error.issues.some((issue) => issue.path[0] === "items")
+        ? "Your basket needs review. Return to your basket and check its produce and quantities." : "");
       return;
     }
     const submitted = parsed.data;
@@ -159,7 +194,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
 
   return (
     <form className="order-request-form" onSubmit={submit} noValidate aria-busy={pending}>
-      <div className="request-scroll">
+      <div className="request-scroll" ref={scrollRegion}>
       <RequestSummary items={summaryItems} saved={!!attempt} recorded={!!receipt} onEdit={onEditBasket} />
       <p className="basket-note request-intro" id="order-details-note">Tell us how to reach you and how you would prefer to receive your produce. This is a request, not a completed purchase.</p>
       <fieldset className="request-fields" disabled={!ready || pending || !!attempt || !!receipt} aria-describedby="order-details-note">
