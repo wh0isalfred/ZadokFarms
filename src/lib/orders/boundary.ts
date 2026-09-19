@@ -1,5 +1,6 @@
 import { createHmac } from "node:crypto";
 import { orderRequestSchema, receiptSchema, type OrderRequest } from "./contract";
+import { whatsappHandoff } from "./whatsapp.server";
 
 type RpcResult = { data: unknown; error: { code?: string } | null };
 export type OrderGateway = (input: OrderRequest, fingerprint: string, phoneHash: string) => PromiseLike<RpcResult>;
@@ -16,7 +17,7 @@ function respond(body: unknown, status: number, extra: Record<string, string> = 
 }
 
 // Route handlers give this bounded JSON contract explicit status and retry semantics.
-export async function handleOrderRequest(request: Request, gateway: OrderGateway, hashSecret: string) {
+export async function handleOrderRequest(request: Request, gateway: OrderGateway, hashSecret: string, whatsappBusinessNumber?: string) {
   const origin = request.headers.get("origin");
   if (origin !== new URL(request.url).origin) return respond({ message: "Submit your request from this website." }, 403);
   if (request.headers.get("content-type")?.split(";")[0] !== "application/json") return respond({ message: "Send a JSON request." }, 415);
@@ -60,7 +61,10 @@ export async function handleOrderRequest(request: Request, gateway: OrderGateway
     }
     const receipt = receiptSchema.safeParse(data);
     if (!receipt.success) return respond({ message: "We could not verify submission. Retry this same request safely." }, 503);
-    return respond({ receipt: receipt.data }, 200);
+    // The RPC binds this exact validated payload to the saved receipt, including on retries.
+    // Items/reference come only from its accepted snapshots, never client expected values.
+    const recorded = { ...receipt.data, fulfilment: input.details.fulfilment, delivery_address: input.details.delivery_address };
+    return respond({ receipt: { ...recorded, whatsappUrl: whatsappHandoff(recorded, whatsappBusinessNumber) } }, 200);
   } catch {
     return respond({ message: "Connection interrupted. Retry this same request safely." }, 503);
   }

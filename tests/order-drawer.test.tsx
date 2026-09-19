@@ -89,7 +89,8 @@ describe("progressive order drawer", () => {
     expect((document.getElementById("order-address") as HTMLTextAreaElement).value).toBe("12 Test Street, Port Harcourt");
     await submit();
     expect(fetcher.mock.calls[1][1].body).toBe(original);
-    expect(document.body.textContent).toContain("Request recorded: ZF-20260917-A2B3C4");
+    expect(document.getElementById("basket-title")?.textContent).toBe("Request recorded");
+    expect(document.body.textContent).toContain("ZF-20260917-A2B3C4");
     expect(sessionStorage.getItem("zadok-request-attempt-v1")).not.toContain("Test Customer");
   });
 
@@ -334,6 +335,116 @@ describe("WhatsApp country calling code", () => {
     await submit(); await render({ cucumber: 3 }); await submit();
     expect(fetcher.mock.calls[0][1].body).toBe(original);
     expect(fetcher.mock.calls[1][1].body).toBe(original);
+  });
+});
+
+describe("recorded confirmation and WhatsApp handoff", () => {
+  const recorded = { reference: "ZF-20260917-A2B3C4", items: [{ name: "Recorded produce", unit: "crate", price: 4500, quantity: 3 }], fulfilment: "delivery", delivery_address: "12 Recorded Street, Port Harcourt", whatsappUrl: "https://wa.me/12025550123?text=Recorded%20request%20ZF-20260917-A2B3C4" };
+
+  it.each([200, 409])("ignores a late overlapping response (%s) after starting another request", async (status) => {
+    const finishes: ((response: Response) => void)[] = [];
+    const fetcher = vi.fn<typeof fetch>(() => new Promise<Response>((resolve) => finishes.push(resolve)));
+    vi.stubGlobal("fetch", fetcher);
+    await render(); await click("Continue to request details");
+    await fill("order-name", "First customer"); await fill("order-phone", "08012345678");
+    await submit();
+    await render({ cucumber: 2 }, false);
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 50)); });
+    await render(); await click("Continue to request details");
+    await submit();
+    expect(fetcher.mock.calls[0][1]?.body).toBe(fetcher.mock.calls[1][1]?.body);
+    await act(async () => finishes[0](Response.json({ receipt: recorded })));
+    await click("Start another request");
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 50)); });
+    await click("Continue to request details");
+    await fill("order-name", "New customer"); await fill("order-phone", "08098765432");
+    await submit();
+    const current = sessionStorage.getItem("zadok-request-attempt-v1");
+    await act(async () => finishes[1](Response.json(status === 200 ? { receipt: recorded } : { code: "catalogue_changed" }, { status })));
+    expect(sessionStorage.getItem("zadok-request-attempt-v1")).toBe(current);
+    expect(document.getElementById("basket-title")?.textContent).toBe("Request details");
+    expect((document.getElementById("order-name") as HTMLInputElement).value).toBe("New customer");
+    await act(async () => finishes[2](Response.json({ receipt: { ...recorded, reference: "ZF-20260917-B3C4D5" } })));
+    expect(document.querySelector(".recorded-reference")?.textContent).toBe("ZF-20260917-B3C4D5");
+  });
+
+  it("shows an accessible handoff only after acceptance, using recorded snapshots", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json({ receipt: recorded })));
+    await render(); await click("Continue to request details");
+    expect(document.querySelector('a[href*="wa.me"]')).toBeNull();
+    await fill("order-name", "Test Customer"); await fill("order-phone", "08012345678");
+    await submit();
+    expect(document.activeElement?.textContent).toBe("Request recorded");
+    const confirmation = document.querySelector(".recorded-request")!;
+    expect(confirmation.textContent).toContain("Recorded produce");
+    expect(confirmation.textContent).toContain("3 × crate");
+    expect(confirmation.textContent).toContain("13,500");
+    expect(confirmation.textContent).toContain(recorded.delivery_address);
+    expect(confirmation.textContent).toContain("Availability, fulfilment and payment are not confirmed");
+    expect(confirmation.textContent).toContain("send the prepared message");
+    expect(confirmation.textContent).not.toContain("Cucumber");
+    const link = confirmation.querySelector("a")!;
+    expect(link.href).toBe(recorded.whatsappUrl); expect(link.target).toBe("_blank");
+    expect(link.rel).toBe("noopener noreferrer");
+    expect(link.textContent).toContain("opens in a new tab or window");
+    expect(link.closest(".request-scroll")).toBeNull();
+    expect(JSON.parse(sessionStorage.getItem("zadok-request-attempt-v1")!)).toEqual({ receipt: recorded });
+    await render({ cucumber: 9 }, false); await render({ cucumber: 9 });
+    expect(document.querySelector(".recorded-request a")?.getAttribute("href")).toBe(recorded.whatsappUrl);
+    expect(document.querySelector(".recorded-subtotal")?.textContent).toContain("13,500");
+  });
+
+  it("recovers after a fresh mount even with an empty basket and keeps normal Back/Forward", async () => {
+    sessionStorage.setItem("zadok-request-attempt-v1", JSON.stringify({ receipt: recorded }));
+    await render({});
+    expect(document.getElementById("basket-title")?.textContent).toBe("Request recorded");
+    expect(document.querySelector(".recorded-request")?.closest("[hidden]")).toBeNull();
+    expect(document.querySelector(".recorded-reference")?.textContent).toBe(recorded.reference);
+    await act(async () => { window.history.back(); await new Promise((resolve) => setTimeout(resolve, 30)); });
+    expect(document.getElementById("basket-title")?.textContent).toBe("Your basket");
+    expect(document.body.textContent).toContain("View recorded request");
+    await act(async () => { window.history.forward(); await new Promise((resolve) => setTimeout(resolve, 30)); });
+    expect(document.getElementById("basket-title")?.textContent).toBe("Request recorded");
+  });
+
+  it("keeps legacy and unavailable confirmations truthful without a fake link", async () => {
+    sessionStorage.setItem("zadok-request-attempt-v1", JSON.stringify({ receipt: { reference: recorded.reference, items: recorded.items } }));
+    await render();
+    expect(document.getElementById("basket-title")?.textContent).toBe("Request recorded");
+    expect(document.querySelector('a[href*="wa.me"]')).toBeNull();
+    expect(document.body.textContent).toContain("WhatsApp link is unavailable");
+    expect(document.body.textContent).toContain("Not available in this saved confirmation");
+    expect(document.body.textContent).toContain(recorded.reference);
+  });
+
+  it("starts another request without clearing basket or unrelated storage", async () => {
+    sessionStorage.setItem("zadok-request-attempt-v1", JSON.stringify({ receipt: recorded }));
+    sessionStorage.setItem("unrelated", "keep me");
+    await render(); await click("Start another request");
+    expect(document.getElementById("basket-title")?.textContent).toBe("Your basket");
+    expect(sessionStorage.getItem("zadok-request-attempt-v1")).toBeNull();
+    expect(sessionStorage.getItem("unrelated")).toBe("keep me");
+    expect(document.querySelector(".basket-row output")?.textContent).toBe("2");
+    await click("Continue to request details");
+    expect((document.getElementById("order-name") as HTMLInputElement).value).toBe("");
+    expect(document.querySelector(".recorded-request")).toBeNull();
+    expect(document.querySelector('a[href*="wa.me"]')).toBeNull();
+  });
+
+  it("keeps an accepted reference visible if both receipt persistence and cleanup fail", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => {
+      vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw Error("storage full"); });
+      vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => { throw Error("storage unavailable"); });
+      return Response.json({ receipt: recorded });
+    }));
+    await render(); await click("Continue to request details");
+    await fill("order-name", "Test Customer"); await fill("order-phone", "08012345678"); await submit();
+    expect(document.body.textContent).toContain(recorded.reference);
+    expect(document.body.textContent).toContain("We could not save this confirmation");
+    expect(document.body.textContent).not.toContain("Connection interrupted");
+    await click("Start another request");
+    expect(document.body.textContent).toContain("We could not reset the saved request");
+    expect(document.body.textContent).toContain(recorded.reference);
   });
 });
 

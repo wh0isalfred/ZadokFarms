@@ -54,7 +54,7 @@ describe("order mutation boundary", () => {
   it("uses stable keyed fingerprints and returns only the validated receipt", async () => {
     const gateway = vi.fn().mockResolvedValue({ data: { ...receipt, private: "not returned" }, error: null });
     const response = await handleOrderRequest(request(), gateway, "test-secret");
-    expect(await response.json()).toEqual({ receipt });
+    expect(await response.json()).toEqual({ receipt: { ...receipt, fulfilment: "to_confirm", delivery_address: "", whatsappUrl: null } });
     expect(response.headers.get("cache-control")).toBe("no-store");
     await handleOrderRequest(request({ ...input, details: { ...input.details, phone: "+2348012345678" } }), gateway, "test-secret");
     expect(gateway.mock.calls[0]).toEqual(gateway.mock.calls[1]);
