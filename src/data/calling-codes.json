@@ -1,0 +1,2455 @@
+{
+  "source": "https://raw.githubusercontent.com/google/libphonenumber/806ee32e8c8c74ca339d8c91a6d86ef58687c9f4/resources/PhoneNumberMetadata.xml",
+  "regions": [
+    {
+      "id": "AF",
+      "name": "Afghanistan",
+      "callingCode": "93",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-7]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AL",
+      "name": "Albania",
+      "callingCode": "355",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:700\\d\\d|900)\\d{3}|8\\d{5,7}|(?:[2-5]|6\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "DZ",
+      "name": "Algeria",
+      "callingCode": "213",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[1-4]|[5-79]\\d|80)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AS",
+      "name": "American Samoa",
+      "callingCode": "1",
+      "prefix": "([267]\\d{6})$|1",
+      "transform": "684$1",
+      "nationalPattern": "(?:[58]\\d\\d|684|900)\\d{7}",
+      "leadingDigits": "684",
+      "main": false
+    },
+    {
+      "id": "AD",
+      "name": "Andorra",
+      "callingCode": "376",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:1|6\\d)\\d{7}|[135-9]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AO",
+      "name": "Angola",
+      "callingCode": "244",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[29]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AI",
+      "name": "Anguilla",
+      "callingCode": "1",
+      "prefix": "([2457]\\d{6})$|1",
+      "transform": "264$1",
+      "nationalPattern": "(?:264|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "264",
+      "main": false
+    },
+    {
+      "id": "AG",
+      "name": "Antigua & Barbuda",
+      "callingCode": "1",
+      "prefix": "([457]\\d{6})$|1",
+      "transform": "268$1",
+      "nationalPattern": "(?:268|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "268",
+      "main": false
+    },
+    {
+      "id": "AR",
+      "name": "Argentina",
+      "callingCode": "54",
+      "prefix": "0?(?:(11|2(?:2(?:02?|[13]|2[13-79]|4[1-6]|5[2457]|6[124-8]|7[1-4]|8[13-6]|9[1267])|3(?:02?|1[467]|2[03-6]|3[13-8]|[49][2-6]|5[2-8]|[67])|4(?:7[3-578]|9)|6(?:[0136]|2[24-6]|4[6-8]?|5[15-8])|80|9(?:0[1-3]|[19]|2\\d|3[1-6]|4[02568]?|5[2-4]|6[2-46]|72?|8[23]?))|3(?:3(?:2[79]|6|8[2578])|4(?:0[0-24-9]|[12]|3[5-8]?|4[24-7]|5[4-68]?|6[02-9]|7[126]|8[2379]?|9[1-36-8])|5(?:1|2[1245]|3[237]?|4[1-46-9]|6[2-4]|7[1-6]|8[2-5]?)|6[24]|7(?:[069]|1[1568]|2[15]|3[145]|4[13]|5[14-8]|7[2-57]|8[126])|8(?:[01]|2[15-7]|3[2578]?|4[13-6]|5[4-8]?|6[1-357-9]|7[36-8]?|8[5-8]?|9[124])))15)?",
+      "transform": "9$1",
+      "nationalPattern": "(?:11|[89]\\d\\d)\\d{8}|[2368]\\d{9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AM",
+      "name": "Armenia",
+      "callingCode": "374",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[1-489]\\d|55|60|77)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AW",
+      "name": "Aruba",
+      "callingCode": "297",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[25-79]\\d\\d|800)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AC",
+      "name": "Ascension Island",
+      "callingCode": "247",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[01589]\\d|[2-467])\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AU",
+      "name": "Australia",
+      "callingCode": "61",
+      "prefix": "(183[12])|0",
+      "transform": "",
+      "nationalPattern": "1(?:[0-79]\\d{7}(?:\\d(?:\\d{2})?)?|8[0-24-9]\\d{7})|[2-478]\\d{8}|1\\d{4,7}",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "AT",
+      "name": "Austria",
+      "callingCode": "43",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{3,12}|2\\d{6,12}|43(?:(?:0\\d|5[02-9])\\d{3,9}|2\\d{4,5}|[3467]\\d{4}|8\\d{4,6}|9\\d{4,7})|5\\d{4,12}|8\\d{7,12}|9\\d{8,12}|(?:[367]\\d|4[0-24-9])\\d{4,11}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AZ",
+      "name": "Azerbaijan",
+      "callingCode": "994",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "365\\d{6}|(?:[124579]\\d|60|88)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BS",
+      "name": "Bahamas",
+      "callingCode": "1",
+      "prefix": "([3-8]\\d{6})$|1",
+      "transform": "242$1",
+      "nationalPattern": "(?:242|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "242",
+      "main": false
+    },
+    {
+      "id": "BH",
+      "name": "Bahrain",
+      "callingCode": "973",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[136-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BD",
+      "name": "Bangladesh",
+      "callingCode": "880",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-469]\\d{9}|8[0-79]\\d{7,8}|[2-79]\\d{8}|[2-9]\\d{7}|[3-9]\\d{6}|[57-9]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BB",
+      "name": "Barbados",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "246$1",
+      "nationalPattern": "(?:246|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "246",
+      "main": false
+    },
+    {
+      "id": "BY",
+      "name": "Belarus",
+      "callingCode": "375",
+      "prefix": "0|80?",
+      "transform": "",
+      "nationalPattern": "(?:[12]\\d|33|44|902)\\d{7}|8(?:0[0-79]\\d{5,7}|[1-7]\\d{9})|8(?:1[0-489]|[5-79]\\d)\\d{7}|8[1-79]\\d{6,7}|8[0-79]\\d{5}|8\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BE",
+      "name": "Belgium",
+      "callingCode": "32",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "4\\d{8}|[1-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BZ",
+      "name": "Belize",
+      "callingCode": "501",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:0800\\d|[2-8])\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BJ",
+      "name": "Benin",
+      "callingCode": "229",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:01\\d|8)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BM",
+      "name": "Bermuda",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "441$1",
+      "nationalPattern": "(?:441|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "441",
+      "main": false
+    },
+    {
+      "id": "BT",
+      "name": "Bhutan",
+      "callingCode": "975",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[178]\\d{7}|[2-8]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BO",
+      "name": "Bolivia",
+      "callingCode": "591",
+      "prefix": "0(1\\d)?",
+      "transform": "",
+      "nationalPattern": "(?:[2-7]\\d\\d|8001)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BA",
+      "name": "Bosnia & Herzegovina",
+      "callingCode": "387",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "6\\d{8}|(?:[35689]\\d|49|70)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BW",
+      "name": "Botswana",
+      "callingCode": "267",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:0800|(?:[37]|800)\\d)\\d{6}|(?:[2-6]\\d|90)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BR",
+      "name": "Brazil",
+      "callingCode": "55",
+      "prefix": "(?:0|90)(?:(1[245]|2[1-35]|31|4[13]|[56]5|99)(\\d{10,11}))?",
+      "transform": "$2",
+      "nationalPattern": "[1-467]\\d{9,10}|55[0-46-9]\\d{8}|[34]\\d{7}|55\\d{7,8}|(?:5[0-46-9]|[89]\\d)\\d{7,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IO",
+      "name": "British Indian Ocean Territory",
+      "callingCode": "246",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "3\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VG",
+      "name": "British Virgin Islands",
+      "callingCode": "1",
+      "prefix": "([2-578]\\d{6})$|1",
+      "transform": "284$1",
+      "nationalPattern": "(?:284|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "284",
+      "main": false
+    },
+    {
+      "id": "BN",
+      "name": "Brunei",
+      "callingCode": "673",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-578]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BG",
+      "name": "Bulgaria",
+      "callingCode": "359",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "00800\\d{7}|[2-7]\\d{6,7}|[89]\\d{6,8}|2\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BF",
+      "name": "Burkina Faso",
+      "callingCode": "226",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[024-7]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BI",
+      "name": "Burundi",
+      "callingCode": "257",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[267]\\d|31)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KH",
+      "name": "Cambodia",
+      "callingCode": "855",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{9}|[1-9]\\d{7,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CM",
+      "name": "Cameroon",
+      "callingCode": "237",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[26]\\d{8}|88\\d{6,7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CA",
+      "name": "Canada",
+      "callingCode": "1",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{9}|3\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CV",
+      "name": "Cape Verde",
+      "callingCode": "238",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-59]\\d\\d|800)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BQ",
+      "name": "Caribbean Netherlands",
+      "callingCode": "599",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[34]1|7\\d)\\d{5}",
+      "leadingDigits": "[347]",
+      "main": false
+    },
+    {
+      "id": "KY",
+      "name": "Cayman Islands",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "345$1",
+      "nationalPattern": "(?:345|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "345",
+      "main": false
+    },
+    {
+      "id": "CF",
+      "name": "Central African Republic",
+      "callingCode": "236",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "8776\\d{4}|(?:[27]\\d|61)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TD",
+      "name": "Chad",
+      "callingCode": "235",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:22|[3689]\\d|77)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CL",
+      "name": "Chile",
+      "callingCode": "56",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "12300\\d{6}|6\\d{9,10}|[2-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CN",
+      "name": "China",
+      "callingCode": "86",
+      "prefix": "(1(?:[12]\\d|79)\\d\\d)|0",
+      "transform": "",
+      "nationalPattern": "(?:(?:1[03-689]|2\\d)\\d\\d|6)\\d{8}|1\\d{10}|[126]\\d{6}(?:\\d(?:\\d{2})?)?|86\\d{5,6}|(?:[3-579]\\d|8[0-57-9])\\d{5,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CX",
+      "name": "Christmas Island",
+      "callingCode": "61",
+      "prefix": "([59]\\d{7})$|0",
+      "transform": "8$1",
+      "nationalPattern": "1(?:[0-79]\\d{8}(?:\\d{2})?|8[0-24-9]\\d{7})|[148]\\d{8}|1\\d{5,7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CC",
+      "name": "Cocos (Keeling) Islands",
+      "callingCode": "61",
+      "prefix": "([59]\\d{7})$|0",
+      "transform": "8$1",
+      "nationalPattern": "1(?:[0-79]\\d{8}(?:\\d{2})?|8[0-24-9]\\d{7})|[148]\\d{8}|1\\d{5,7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CO",
+      "name": "Colombia",
+      "callingCode": "57",
+      "prefix": "0([3579]|4(?:[14]4|56))?",
+      "transform": "",
+      "nationalPattern": "(?:46|60\\d\\d)\\d{6}|(?:1\\d|[39])\\d{9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KM",
+      "name": "Comoros",
+      "callingCode": "269",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[3478]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CG",
+      "name": "Congo - Brazzaville",
+      "callingCode": "242",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "222\\d{6}|(?:0\\d|80)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CD",
+      "name": "Congo - Kinshasa",
+      "callingCode": "243",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:(?:[189]|5\\d)\\d|2)\\d{7}|[1-68]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CK",
+      "name": "Cook Islands",
+      "callingCode": "682",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-578]\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CR",
+      "name": "Costa Rica",
+      "callingCode": "506",
+      "prefix": "(19(?:0[0-2468]|1[09]|20|66|77|99))",
+      "transform": "",
+      "nationalPattern": "(?:8\\d|90)\\d{8}|(?:[24-8]\\d{3}|3005)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "HR",
+      "name": "Croatia",
+      "callingCode": "385",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-69]\\d{8}|80\\d{5,7}|[1-79]\\d{7}|6\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CU",
+      "name": "Cuba",
+      "callingCode": "53",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[2-7]|8\\d\\d)\\d{7}|[2-47]\\d{6}|[34]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CW",
+      "name": "Curaçao",
+      "callingCode": "599",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[34]1|60|(?:7|9\\d)\\d)\\d{5}",
+      "leadingDigits": "[69]",
+      "main": true
+    },
+    {
+      "id": "CY",
+      "name": "Cyprus",
+      "callingCode": "357",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[279]\\d|[58]0)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CZ",
+      "name": "Czechia",
+      "callingCode": "420",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-578]\\d|60)\\d{7}|9\\d{8,11}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CI",
+      "name": "Côte d’Ivoire",
+      "callingCode": "225",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[02]\\d{9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "DK",
+      "name": "Denmark",
+      "callingCode": "45",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "DJ",
+      "name": "Djibouti",
+      "callingCode": "253",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:2\\d|77)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "DM",
+      "name": "Dominica",
+      "callingCode": "1",
+      "prefix": "([2-7]\\d{6})$|1",
+      "transform": "767$1",
+      "nationalPattern": "(?:[58]\\d\\d|767|900)\\d{7}",
+      "leadingDigits": "767",
+      "main": false
+    },
+    {
+      "id": "DO",
+      "name": "Dominican Republic",
+      "callingCode": "1",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "(?:[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "8001|8[024]9",
+      "main": false
+    },
+    {
+      "id": "EC",
+      "name": "Ecuador",
+      "callingCode": "593",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{9,10}|(?:[2-7]|9\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "EG",
+      "name": "Egypt",
+      "callingCode": "20",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[189]\\d{8,9}|[24-6]\\d{8}|[135]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SV",
+      "name": "El Salvador",
+      "callingCode": "503",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[25-7]\\d{7}|(?:80\\d|900)\\d{4}(?:\\d{4})?",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GQ",
+      "name": "Equatorial Guinea",
+      "callingCode": "240",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "222\\d{6}|(?:3\\d|55|[89]0)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ER",
+      "name": "Eritrea",
+      "callingCode": "291",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[178]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "EE",
+      "name": "Estonia",
+      "callingCode": "372",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "8\\d{9}|[4578]\\d{7}|(?:[3-8]\\d|90)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SZ",
+      "name": "Eswatini",
+      "callingCode": "268",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "0800\\d{4}|(?:[237]\\d|900)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ET",
+      "name": "Ethiopia",
+      "callingCode": "251",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:11|[2-57-9]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "FK",
+      "name": "Falkland Islands (Islas Malvinas)",
+      "callingCode": "500",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-7]\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "FO",
+      "name": "Faroe Islands",
+      "callingCode": "298",
+      "prefix": "(10(?:01|[12]0|88))",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "FJ",
+      "name": "Fiji",
+      "callingCode": "679",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "45\\d{5}|(?:0800\\d|[235-9])\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "FI",
+      "name": "Finland",
+      "callingCode": "358",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-35689]\\d{4}|7\\d{10,11}|(?:[124-7]\\d|3[0-46-9])\\d{8}|[1-9]\\d{5,8}",
+      "leadingDigits": "1[03-79]|[2-9]",
+      "main": true
+    },
+    {
+      "id": "FR",
+      "name": "France",
+      "callingCode": "33",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GF",
+      "name": "French Guiana",
+      "callingCode": "594",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:694\\d|7093)\\d{5}|(?:59|[89]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PF",
+      "name": "French Polynesia",
+      "callingCode": "689",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "4\\d{5}(?:\\d{2})?|8\\d{7,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GA",
+      "name": "Gabon",
+      "callingCode": "241",
+      "prefix": "0(11\\d{6}|60\\d{6}|61\\d{6}|6[256]\\d{6}|7[467]\\d{6})",
+      "transform": "$1",
+      "nationalPattern": "(?:[067]\\d|11)\\d{6}|[2-7]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GM",
+      "name": "Gambia",
+      "callingCode": "220",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[48]\\d{8}|[2-9]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GE",
+      "name": "Georgia",
+      "callingCode": "995",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[3-57]\\d\\d|800)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "DE",
+      "name": "Germany",
+      "callingCode": "49",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2579]\\d{5,14}|49(?:[34]0|69|8\\d)\\d\\d?|49(?:37|49|60|7[089]|9\\d)\\d{1,3}|49(?:2[024-9]|3[2-689]|7[1-7])\\d{1,8}|(?:1|[368]\\d|4[0-8])\\d{3,13}|49(?:[015]\\d|2[13]|31|[46][1-8])\\d{1,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GH",
+      "name": "Ghana",
+      "callingCode": "233",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[235]\\d{8}|800\\d{5,6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GI",
+      "name": "Gibraltar",
+      "callingCode": "350",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[25]\\d|60)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GR",
+      "name": "Greece",
+      "callingCode": "30",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "5005000\\d{3}|8\\d{9,11}|(?:[269]\\d|70)\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GL",
+      "name": "Greenland",
+      "callingCode": "299",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:19|[2-689]\\d|70)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GD",
+      "name": "Grenada",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "473$1",
+      "nationalPattern": "(?:473|[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "473",
+      "main": false
+    },
+    {
+      "id": "GP",
+      "name": "Guadeloupe",
+      "callingCode": "590",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "7090\\d{5}|(?:[56]9|[89]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "GU",
+      "name": "Guam",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "671$1",
+      "nationalPattern": "(?:[58]\\d\\d|671|900)\\d{7}",
+      "leadingDigits": "671",
+      "main": false
+    },
+    {
+      "id": "GT",
+      "name": "Guatemala",
+      "callingCode": "502",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "80\\d{6}|(?:1\\d{3}|[2-7])\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GG",
+      "name": "Guernsey",
+      "callingCode": "44",
+      "prefix": "([25-9]\\d{5})$|0|180020",
+      "transform": "1481$1",
+      "nationalPattern": "(?:1481|[357-9]\\d{3})\\d{6}|8\\d{6}(?:\\d{2})?",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GN",
+      "name": "Guinea",
+      "callingCode": "224",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "722\\d{6}|(?:3|6\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GW",
+      "name": "Guinea-Bissau",
+      "callingCode": "245",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[49]\\d{8}|4\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GY",
+      "name": "Guyana",
+      "callingCode": "592",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-8]\\d{3}|9008)\\d{3}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "HT",
+      "name": "Haiti",
+      "callingCode": "509",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-589]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "HN",
+      "name": "Honduras",
+      "callingCode": "504",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "8\\d{10}|[237-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "HK",
+      "name": "Hong Kong",
+      "callingCode": "852",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "8[0-46-9]\\d{6,7}|9\\d{4,7}|(?:[2-7]|9\\d{3})\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "HU",
+      "name": "Hungary",
+      "callingCode": "36",
+      "prefix": "06",
+      "transform": "",
+      "nationalPattern": "[235-7]\\d{8}|[1-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IS",
+      "name": "Iceland",
+      "callingCode": "354",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:38\\d|[4-9])\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IN",
+      "name": "India",
+      "callingCode": "91",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:000800|[2-9]\\d\\d)\\d{7}|1\\d{7,12}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ID",
+      "name": "Indonesia",
+      "callingCode": "62",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "00[1-9]\\d{9,14}|(?:[1-36]|8\\d{5})\\d{6}|00\\d{9}|[1-9]\\d{8,10}|[2-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IR",
+      "name": "Iran",
+      "callingCode": "98",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-9]\\d{9}|(?:[1-8]\\d\\d|9)\\d{3,4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IQ",
+      "name": "Iraq",
+      "callingCode": "964",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:1|7\\d\\d)\\d{7}|[2-6]\\d{7,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IE",
+      "name": "Ireland",
+      "callingCode": "353",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:1\\d|[2569])\\d{6,8}|4\\d{6,9}|7\\d{8}|8\\d{8,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IM",
+      "name": "Isle of Man",
+      "callingCode": "44",
+      "prefix": "([25-8]\\d{5})$|0|180020",
+      "transform": "1624$1",
+      "nationalPattern": "1624\\d{6}|(?:[3578]\\d|90)\\d{8}",
+      "leadingDigits": "74576|(?:16|7[56])24",
+      "main": false
+    },
+    {
+      "id": "IL",
+      "name": "Israel",
+      "callingCode": "972",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{6}(?:\\d{3,5})?|[57]\\d{8}|[1-489]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "IT",
+      "name": "Italy",
+      "callingCode": "39",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "0\\d{5,11}|1\\d{8,10}|3(?:[0-8]\\d{7,10}|9\\d{7,8})|(?:43|55|70)\\d{8}|8\\d{5}(?:\\d{2,4})?",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "JM",
+      "name": "Jamaica",
+      "callingCode": "1",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "(?:[58]\\d\\d|658|900)\\d{7}",
+      "leadingDigits": "658|876",
+      "main": false
+    },
+    {
+      "id": "JP",
+      "name": "Japan",
+      "callingCode": "81",
+      "prefix": "(000[2569]\\d{4,6})$|(?:(?:003768)0?)|0",
+      "transform": "$1",
+      "nationalPattern": "00[1-9]\\d{6,14}|[25-9]\\d{9}|(?:00|[1-9]\\d\\d)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "JE",
+      "name": "Jersey",
+      "callingCode": "44",
+      "prefix": "([0-24-8]\\d{5})$|0|180020",
+      "transform": "1534$1",
+      "nationalPattern": "1534\\d{6}|(?:[3578]\\d|90)\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "JO",
+      "name": "Jordan",
+      "callingCode": "962",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:(?:[2689]|7\\d)\\d|32|427|53)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KZ",
+      "name": "Kazakhstan",
+      "callingCode": "7",
+      "prefix": "8",
+      "transform": "",
+      "nationalPattern": "8\\d{13}|[78]\\d{9}",
+      "leadingDigits": "7",
+      "main": false
+    },
+    {
+      "id": "KE",
+      "name": "Kenya",
+      "callingCode": "254",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[17]\\d\\d|900)\\d{6}|(?:2|80)0\\d{6,7}|[4-6]\\d{6,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KI",
+      "name": "Kiribati",
+      "callingCode": "686",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[37]\\d|6[0-79])\\d{6}|(?:[2-48]\\d|50)\\d{3}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "XK",
+      "name": "Kosovo",
+      "callingCode": "383",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "2\\d{7,8}|3\\d{7,11}|(?:4\\d\\d|[89]00)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KW",
+      "name": "Kuwait",
+      "callingCode": "965",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "18\\d{5}|(?:[2569]\\d|41)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KG",
+      "name": "Kyrgyzstan",
+      "callingCode": "996",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "8\\d{9}|[235-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LA",
+      "name": "Laos",
+      "callingCode": "856",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[23]\\d{9}|3\\d{8}|(?:[235-8]\\d|41)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LV",
+      "name": "Latvia",
+      "callingCode": "371",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[268]\\d|78|90)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LB",
+      "name": "Lebanon",
+      "callingCode": "961",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[27-9]\\d{7}|[13-9]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LS",
+      "name": "Lesotho",
+      "callingCode": "266",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[256]\\d\\d|800)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LR",
+      "name": "Liberia",
+      "callingCode": "231",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[2457]\\d|33|88)\\d{7}|(?:2\\d|[4-6])\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LY",
+      "name": "Libya",
+      "callingCode": "218",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LI",
+      "name": "Liechtenstein",
+      "callingCode": "423",
+      "prefix": "(1001)|0",
+      "transform": "",
+      "nationalPattern": "[68]\\d{8}|(?:[2378]\\d|90)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LT",
+      "name": "Lithuania",
+      "callingCode": "370",
+      "prefix": "[08]",
+      "transform": "",
+      "nationalPattern": "(?:[3469]\\d|52|[78]0)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LU",
+      "name": "Luxembourg",
+      "callingCode": "352",
+      "prefix": "(15(?:0[06]|1[12]|[35]5|4[04]|6[26]|77|88|99)\\d)",
+      "transform": "",
+      "nationalPattern": "35[013-9]\\d{4,8}|6\\d{8}|35\\d{2,4}|(?:[2457-9]\\d|3[0-46-9])\\d{2,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MO",
+      "name": "Macao",
+      "callingCode": "853",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "0800\\d{3}|(?:28|[68]\\d)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MG",
+      "name": "Madagascar",
+      "callingCode": "261",
+      "prefix": "([24-9]\\d{6})$|0",
+      "transform": "20$1",
+      "nationalPattern": "[23]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MW",
+      "name": "Malawi",
+      "callingCode": "265",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[1289]\\d|31|77)\\d{7}|1\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MY",
+      "name": "Malaysia",
+      "callingCode": "60",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{8,9}|(?:3\\d|[4-9])\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MV",
+      "name": "Maldives",
+      "callingCode": "960",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:800|9[0-57-9]\\d)\\d{7}|[34679]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ML",
+      "name": "Mali",
+      "callingCode": "223",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[24-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MT",
+      "name": "Malta",
+      "callingCode": "356",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "3550\\d{4}|(?:[2579]\\d\\d|800)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MH",
+      "name": "Marshall Islands",
+      "callingCode": "692",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "329\\d{4}|(?:[256]\\d|45)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MQ",
+      "name": "Martinique",
+      "callingCode": "596",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "7091\\d{5}|(?:[56]9|[89]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MR",
+      "name": "Mauritania",
+      "callingCode": "222",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-4]\\d\\d|800)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MU",
+      "name": "Mauritius",
+      "callingCode": "230",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[57]|8\\d\\d)\\d{7}|[2-468]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "YT",
+      "name": "Mayotte",
+      "callingCode": "262",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:639\\d|7093)\\d{5}|(?:26|80|9\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MX",
+      "name": "Mexico",
+      "callingCode": "52",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "FM",
+      "name": "Micronesia",
+      "callingCode": "691",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[39]\\d\\d|820)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MD",
+      "name": "Moldova",
+      "callingCode": "373",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[235-7]\\d|[89]0)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MC",
+      "name": "Monaco",
+      "callingCode": "377",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[3489]|[67]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MN",
+      "name": "Mongolia",
+      "callingCode": "976",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[12]\\d{7,9}|[5-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ME",
+      "name": "Montenegro",
+      "callingCode": "382",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:20|[3-79]\\d)\\d{6}|80\\d{6,7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MS",
+      "name": "Montserrat",
+      "callingCode": "1",
+      "prefix": "([34]\\d{6})$|1",
+      "transform": "664$1",
+      "nationalPattern": "(?:[58]\\d\\d|664|900)\\d{7}",
+      "leadingDigits": "664",
+      "main": false
+    },
+    {
+      "id": "MA",
+      "name": "Morocco",
+      "callingCode": "212",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[5-8]\\d{8}",
+      "leadingDigits": "[5-8]",
+      "main": true
+    },
+    {
+      "id": "MZ",
+      "name": "Mozambique",
+      "callingCode": "258",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:2|8\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MM",
+      "name": "Myanmar (Burma)",
+      "callingCode": "95",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "1\\d{5,7}|95\\d{6}|(?:[4-7]|9[0-46-9])\\d{6,8}|(?:2|8\\d)\\d{5,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NA",
+      "name": "Namibia",
+      "callingCode": "264",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[68]\\d{7,8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NR",
+      "name": "Nauru",
+      "callingCode": "674",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:222|444|(?:55|8\\d)\\d|666|777|999)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NP",
+      "name": "Nepal",
+      "callingCode": "977",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:1\\d|9)\\d{9}|[1-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NL",
+      "name": "Netherlands",
+      "callingCode": "31",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[124-7]\\d\\d|3(?:[02-9]\\d|1[0-8]))\\d{6}|8\\d{6,9}|9\\d{6,10}|1\\d{4,5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NC",
+      "name": "New Caledonia",
+      "callingCode": "687",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:050|[2-57-9]\\d\\d)\\d{3}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NZ",
+      "name": "New Zealand",
+      "callingCode": "64",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1289]\\d{9}|50\\d{5}(?:\\d{2,3})?|[27-9]\\d{7,8}|(?:[34]\\d|6[0-35-9])\\d{6}|8\\d{4,6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NI",
+      "name": "Nicaragua",
+      "callingCode": "505",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:1800|[25-8]\\d{3})\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NE",
+      "name": "Niger",
+      "callingCode": "227",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[027-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NG",
+      "name": "Nigeria",
+      "callingCode": "234",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:20|9\\d)\\d{8}|[78]\\d{9,13}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NU",
+      "name": "Niue",
+      "callingCode": "683",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[4-7]|888\\d)\\d{3}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "NF",
+      "name": "Norfolk Island",
+      "callingCode": "672",
+      "prefix": "([0-258]\\d{4})$",
+      "transform": "3$1",
+      "nationalPattern": "[13]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KP",
+      "name": "North Korea",
+      "callingCode": "850",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "85\\d{6}|(?:19\\d|[2-7])\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MK",
+      "name": "North Macedonia",
+      "callingCode": "389",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-578]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "MP",
+      "name": "Northern Mariana Islands",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "670$1",
+      "nationalPattern": "[58]\\d{9}|(?:67|90)0\\d{7}",
+      "leadingDigits": "670",
+      "main": false
+    },
+    {
+      "id": "NO",
+      "name": "Norway",
+      "callingCode": "47",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:0|[2-9]\\d{3})\\d{4}",
+      "leadingDigits": "[02-689]|7[0-8]",
+      "main": true
+    },
+    {
+      "id": "OM",
+      "name": "Oman",
+      "callingCode": "968",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:1505|[279]\\d{3}|500)\\d{4}|800\\d{5,6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PK",
+      "name": "Pakistan",
+      "callingCode": "92",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "122\\d{6}|[24-8]\\d{10,11}|9(?:[013-9]\\d{8,10}|2(?:[01]\\d\\d|2(?:[06-8]\\d|1[01]))\\d{7})|(?:[2-8]\\d{3}|92(?:[0-7]\\d|8[1-9]))\\d{6}|[24-9]\\d{8}|[89]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PW",
+      "name": "Palau",
+      "callingCode": "680",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[24-8]\\d\\d|345|900)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PS",
+      "name": "Palestine",
+      "callingCode": "970",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2489]2\\d{6}|(?:1\\d|5)\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PA",
+      "name": "Panama",
+      "callingCode": "507",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:00800|8\\d{3})\\d{6}|[68]\\d{7}|[1-57-9]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PG",
+      "name": "Papua New Guinea",
+      "callingCode": "675",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:180|[78]\\d{3})\\d{4}|(?:[2-589]\\d|64)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PY",
+      "name": "Paraguay",
+      "callingCode": "595",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[36-8]\\d{5,8}|4\\d{6,8}|59\\d{6}|9\\d{5,10}|(?:2\\d|5[0-8])\\d{6,7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PE",
+      "name": "Peru",
+      "callingCode": "51",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[14-8]|9\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PH",
+      "name": "Philippines",
+      "callingCode": "63",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[2-7]|9\\d)\\d{8}|2\\d{5}|(?:1800|8)\\d{7,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PL",
+      "name": "Poland",
+      "callingCode": "48",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:6|8\\d\\d)\\d{7}|[1-9]\\d{6}(?:\\d{2})?|[26]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PT",
+      "name": "Portugal",
+      "callingCode": "351",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "1693\\d{5}|(?:[26-9]\\d|30)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PR",
+      "name": "Puerto Rico",
+      "callingCode": "1",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "(?:[589]\\d\\d|787)\\d{7}",
+      "leadingDigits": "787|939",
+      "main": false
+    },
+    {
+      "id": "QA",
+      "name": "Qatar",
+      "callingCode": "974",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "800\\d{4}|(?:2|800)\\d{6}|(?:0080|[3-7])\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "RO",
+      "name": "Romania",
+      "callingCode": "40",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[236-8]\\d|90)\\d{7}|[23]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "RU",
+      "name": "Russia",
+      "callingCode": "7",
+      "prefix": "8",
+      "transform": "",
+      "nationalPattern": "8\\d{13}|[347-9]\\d{9}",
+      "leadingDigits": "[3489]",
+      "main": true
+    },
+    {
+      "id": "RW",
+      "name": "Rwanda",
+      "callingCode": "250",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:06|[27]\\d\\d|[89]00)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "RE",
+      "name": "Réunion",
+      "callingCode": "262",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "709\\d{6}|(?:26|[689]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "WS",
+      "name": "Samoa",
+      "callingCode": "685",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-6]|8\\d{5})\\d{4}|[78]\\d{6}|[68]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SM",
+      "name": "San Marino",
+      "callingCode": "378",
+      "prefix": "([89]\\d{5})$",
+      "transform": "0549$1",
+      "nationalPattern": "(?:0549|[5-7]\\d)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SA",
+      "name": "Saudi Arabia",
+      "callingCode": "966",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[15]\\d|800|92)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SN",
+      "name": "Senegal",
+      "callingCode": "221",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[378]\\d|93)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "RS",
+      "name": "Serbia",
+      "callingCode": "381",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "38[02-9]\\d{6,9}|6\\d{7,9}|90\\d{4,8}|38\\d{5,6}|(?:7\\d\\d|800)\\d{3,9}|(?:[12]\\d|3[0-79])\\d{5,10}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SC",
+      "name": "Seychelles",
+      "callingCode": "248",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2489]\\d|64)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SL",
+      "name": "Sierra Leone",
+      "callingCode": "232",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[237-9]\\d|66)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SG",
+      "name": "Singapore",
+      "callingCode": "65",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:(?:1\\d|8)\\d\\d|7000)\\d{7}|[3689]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SX",
+      "name": "Sint Maarten",
+      "callingCode": "1",
+      "prefix": "(5\\d{6})$|1",
+      "transform": "721$1",
+      "nationalPattern": "7215\\d{6}|(?:[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "721",
+      "main": false
+    },
+    {
+      "id": "SK",
+      "name": "Slovakia",
+      "callingCode": "421",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-689]\\d{8}|[2-59]\\d{6}|[2-5]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SI",
+      "name": "Slovenia",
+      "callingCode": "386",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-7]\\d{7}|8\\d{4,7}|90\\d{4,6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SB",
+      "name": "Solomon Islands",
+      "callingCode": "677",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[6-9]\\d{6}|[1-6]\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SO",
+      "name": "Somalia",
+      "callingCode": "252",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[346-9]\\d{8}|[12679]\\d{7}|[1-5]\\d{6}|[1348]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ZA",
+      "name": "South Africa",
+      "callingCode": "27",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-79]\\d{8}|8\\d{4,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "KR",
+      "name": "South Korea",
+      "callingCode": "82",
+      "prefix": "0(8(?:[1-46-8]|5\\d\\d))?",
+      "transform": "",
+      "nationalPattern": "00[1-9]\\d{8,11}|(?:[12]|5\\d{3})\\d{7}|[13-6]\\d{9}|(?:[1-6]\\d|80)\\d{7}|[3-6]\\d{4,5}|(?:00|7)0\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SS",
+      "name": "South Sudan",
+      "callingCode": "211",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[19]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ES",
+      "name": "Spain",
+      "callingCode": "34",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:400|[5-9]\\d\\d)\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "LK",
+      "name": "Sri Lanka",
+      "callingCode": "94",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "BL",
+      "name": "St. Barthélemy",
+      "callingCode": "590",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "7090\\d{5}|(?:[56]9|[89]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SH",
+      "name": "St. Helena",
+      "callingCode": "290",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[256]\\d|8)\\d{3}",
+      "leadingDigits": "[256]",
+      "main": true
+    },
+    {
+      "id": "KN",
+      "name": "St. Kitts & Nevis",
+      "callingCode": "1",
+      "prefix": "([2-7]\\d{6})$|1",
+      "transform": "869$1",
+      "nationalPattern": "(?:[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "869",
+      "main": false
+    },
+    {
+      "id": "LC",
+      "name": "St. Lucia",
+      "callingCode": "1",
+      "prefix": "([2-8]\\d{6})$|1",
+      "transform": "758$1",
+      "nationalPattern": "(?:[58]\\d\\d|758|900)\\d{7}",
+      "leadingDigits": "758",
+      "main": false
+    },
+    {
+      "id": "MF",
+      "name": "St. Martin",
+      "callingCode": "590",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "7090\\d{5}|(?:[56]9|[89]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "PM",
+      "name": "St. Pierre & Miquelon",
+      "callingCode": "508",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[78]\\d{8}|[2-9]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VC",
+      "name": "St. Vincent & Grenadines",
+      "callingCode": "1",
+      "prefix": "([2-7]\\d{6})$|1",
+      "transform": "784$1",
+      "nationalPattern": "(?:[58]\\d\\d|784|900)\\d{7}",
+      "leadingDigits": "784",
+      "main": false
+    },
+    {
+      "id": "SD",
+      "name": "Sudan",
+      "callingCode": "249",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[19]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SR",
+      "name": "Suriname",
+      "callingCode": "597",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[2-5]|[6-9]\\d)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SJ",
+      "name": "Svalbard & Jan Mayen",
+      "callingCode": "47",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "0\\d{4}|(?:[489]\\d|79)\\d{6}",
+      "leadingDigits": "79",
+      "main": false
+    },
+    {
+      "id": "SE",
+      "name": "Sweden",
+      "callingCode": "46",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[26]\\d\\d|9)\\d{9}|[1-9]\\d{8}|[1-689]\\d{7}|[1-4689]\\d{6}|2\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "CH",
+      "name": "Switzerland",
+      "callingCode": "41",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "8\\d{11}|[2-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "SY",
+      "name": "Syria",
+      "callingCode": "963",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[1-359]\\d{8}|[1-5]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ST",
+      "name": "São Tomé & Príncipe",
+      "callingCode": "239",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:22|9\\d)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TW",
+      "name": "Taiwan",
+      "callingCode": "886",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[2-689]\\d{8}|7\\d{9,10}|[2-8]\\d{7}|2\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TJ",
+      "name": "Tajikistan",
+      "callingCode": "992",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:[0-57-9]\\d|66)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TZ",
+      "name": "Tanzania",
+      "callingCode": "255",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[25-8]\\d|41|90)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TH",
+      "name": "Thailand",
+      "callingCode": "66",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:001800|[2-57]|[689]\\d)\\d{7}|1\\d{7,9}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TL",
+      "name": "Timor-Leste",
+      "callingCode": "670",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "7\\d{7}|(?:[2-47]\\d|[89]0)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TG",
+      "name": "Togo",
+      "callingCode": "228",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[279]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TK",
+      "name": "Tokelau",
+      "callingCode": "690",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-47]\\d{3,6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TO",
+      "name": "Tonga",
+      "callingCode": "676",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:0800|(?:[5-8]\\d\\d|999)\\d)\\d{3}|[2-8]\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TT",
+      "name": "Trinidad & Tobago",
+      "callingCode": "1",
+      "prefix": "([2-46-8]\\d{6})$|1",
+      "transform": "868$1",
+      "nationalPattern": "(?:[58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "868",
+      "main": false
+    },
+    {
+      "id": "TA",
+      "name": "Tristan da Cunha",
+      "callingCode": "290",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "8\\d{3}",
+      "leadingDigits": "8",
+      "main": false
+    },
+    {
+      "id": "TN",
+      "name": "Tunisia",
+      "callingCode": "216",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[2-57-9]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TM",
+      "name": "Turkmenistan",
+      "callingCode": "993",
+      "prefix": "8",
+      "transform": "",
+      "nationalPattern": "[1-7]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TC",
+      "name": "Turks & Caicos Islands",
+      "callingCode": "1",
+      "prefix": "([2-479]\\d{6})$|1",
+      "transform": "649$1",
+      "nationalPattern": "(?:[58]\\d\\d|649|900)\\d{7}",
+      "leadingDigits": "649",
+      "main": false
+    },
+    {
+      "id": "TV",
+      "name": "Tuvalu",
+      "callingCode": "688",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:2|7\\d\\d|90)\\d{4}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "TR",
+      "name": "Türkiye",
+      "callingCode": "90",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "4\\d{6}|8\\d{11,12}|(?:[2-58]\\d\\d|900)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VI",
+      "name": "U.S. Virgin Islands",
+      "callingCode": "1",
+      "prefix": "([2-9]\\d{6})$|1",
+      "transform": "340$1",
+      "nationalPattern": "[58]\\d{9}|(?:34|90)0\\d{7}",
+      "leadingDigits": "340",
+      "main": false
+    },
+    {
+      "id": "UG",
+      "name": "Uganda",
+      "callingCode": "256",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "800\\d{6}|(?:[29]0|[347]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "UA",
+      "name": "Ukraine",
+      "callingCode": "380",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[89]\\d{9}|[3-9]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AE",
+      "name": "United Arab Emirates",
+      "callingCode": "971",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:[4-7]\\d|9[0-689])\\d{7}|800\\d{2,9}|[2-4679]\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "GB",
+      "name": "United Kingdom",
+      "callingCode": "44",
+      "prefix": "0|180020",
+      "transform": "",
+      "nationalPattern": "[1-357-9]\\d{9}|[18]\\d{8}|8\\d{6}",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "US",
+      "name": "United States",
+      "callingCode": "1",
+      "prefix": "1",
+      "transform": "",
+      "nationalPattern": "[2-9]\\d{9}|3\\d{6}",
+      "leadingDigits": "",
+      "main": true
+    },
+    {
+      "id": "UY",
+      "name": "Uruguay",
+      "callingCode": "598",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "0004\\d{2,9}|[1249]\\d{7}|2\\d{3,4}|(?:[49]\\d|80)\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "UZ",
+      "name": "Uzbekistan",
+      "callingCode": "998",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:20|33|[5-9]\\d)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VU",
+      "name": "Vanuatu",
+      "callingCode": "678",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "[57-9]\\d{6}|(?:[238]\\d|48)\\d{3}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VA",
+      "name": "Vatican City",
+      "callingCode": "39",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "0\\d{5,10}|3[0-8]\\d{7,10}|55\\d{8}|8\\d{5}(?:\\d{2,4})?|(?:1\\d|39)\\d{7,8}",
+      "leadingDigits": "06698",
+      "main": false
+    },
+    {
+      "id": "VE",
+      "name": "Venezuela",
+      "callingCode": "58",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[68]00\\d{7}|(?:[24]\\d|[59]0)\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "VN",
+      "name": "Vietnam",
+      "callingCode": "84",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[12]\\d{9}|[135-9]\\d{8}|[16]\\d{6,7}|7\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "WF",
+      "name": "Wallis & Futuna",
+      "callingCode": "681",
+      "prefix": "",
+      "transform": "",
+      "nationalPattern": "(?:40|72|8\\d{4})\\d{4}|[89]\\d{5}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "EH",
+      "name": "Western Sahara",
+      "callingCode": "212",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "[5-8]\\d{8}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "YE",
+      "name": "Yemen",
+      "callingCode": "967",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:1|7\\d)\\d{7}|[1-7]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ZM",
+      "name": "Zambia",
+      "callingCode": "260",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "800\\d{6}|(?:21|[579]\\d|63)\\d{7}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "ZW",
+      "name": "Zimbabwe",
+      "callingCode": "263",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "(?:13|8\\d{4})\\d{5}|[235-8]\\d{8}|[2-689]\\d{6}",
+      "leadingDigits": "",
+      "main": false
+    },
+    {
+      "id": "AX",
+      "name": "Åland Islands",
+      "callingCode": "358",
+      "prefix": "0",
+      "transform": "",
+      "nationalPattern": "2\\d{4,9}|35\\d{4,5}|(?:60\\d\\d|800)\\d{4,6}|7\\d{5,11}|(?:[14]\\d|3[0-46-9]|50)\\d{4,8}",
+      "leadingDigits": "18",
+      "main": false
+    }
+  ]
+}

@@ -67,7 +67,10 @@ describe("progressive order drawer", () => {
     await submit();
     expect(fetcher).not.toHaveBeenCalled();
     expect(document.getElementById("order-address")?.getAttribute("aria-invalid")).toBe("true");
-    expect(document.activeElement?.getAttribute("role")).toBe("alert");
+    expect(document.activeElement?.id).toBe("order-address");
+    expect(document.getElementById("order-address-error")?.textContent).toBe("Add a delivery address so Zadok can review the request.");
+    await fill("order-address", "12 Test Street");
+    expect(document.getElementById("order-address-error")).toBeNull();
     await fill("order-fulfilment", "pickup");
     expect(document.getElementById("order-address")).toBeNull();
   });
@@ -115,6 +118,61 @@ describe("progressive order drawer", () => {
 });
 
 describe("request UX increment", () => {
+  it("prioritises field focus when basket and contact validation fail together", async () => {
+    const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
+    await render({ cucumber: 10000 }); await click("Continue to request details");
+    await submit();
+    expect(document.activeElement?.id).toBe("order-name");
+    expect(document.querySelector(".request-feedback")?.textContent).toContain("Your basket needs review");
+    await fill("order-name", "Test Customer"); await submit();
+    expect(document.activeElement?.id).toBe("order-phone");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("focuses invalid contact fields in order and clears only a corrected field's error", async () => {
+    const fetcher = vi.fn(); vi.stubGlobal("fetch", fetcher);
+    await render(); await click("Continue to request details");
+    await fill("order-fulfilment", "delivery");
+    await submit();
+    expect(document.activeElement?.id).toBe("order-name");
+    expect(document.getElementById("order-name-error")?.textContent).toBe("Enter the name we should use for this request.");
+    expect(document.getElementById("order-phone-error")?.textContent).toBe("Enter your WhatsApp number and check the country calling code.");
+    expect(document.querySelector(".request-feedback")?.textContent).toBe("");
+    expect(document.body.textContent).not.toContain("Check the highlighted details and your basket");
+    expect(document.getElementById("order-name")?.getAttribute("aria-describedby")).toBe("order-name-error");
+    expect(document.querySelectorAll('.field-error[role="alert"], .field-error[aria-live]')).toHaveLength(0);
+    await fill("order-name", "A");
+    expect(document.getElementById("order-name-error")).not.toBeNull();
+    await fill("order-name", "Test Customer");
+    expect(document.getElementById("order-name-error")).toBeNull();
+    expect(document.getElementById("order-phone-error")).not.toBeNull();
+    expect(document.getElementById("order-address-error")).not.toBeNull();
+    await submit();
+    expect(document.activeElement?.id).toBe("order-phone");
+    await fill("order-phone", "+2348012345678");
+    expect(document.getElementById("order-phone-error")).toBeNull();
+    expect(document.getElementById("order-address-error")).not.toBeNull();
+    await submit();
+    expect(document.activeElement?.id).toBe("order-address");
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("keeps basket imagery, labelled quantity controls and the review action outside the scroll body", async () => {
+    await render();
+    const row = document.querySelector(".basket-row")!;
+    const image = row.querySelector("img")!;
+    expect(image.alt).toBe("Cucumber");
+    expect(image.src).toContain("cucumber.jpg");
+    expect(row.querySelector('[aria-label="Remove one Cucumber"]')).not.toBeNull();
+    expect(row.querySelector('[aria-label="Add another Cucumber"]')).not.toBeNull();
+    expect(row.querySelector('output[aria-live="polite"]')?.textContent).toBe("2");
+    expect(row.querySelector(".basket-line-total")?.textContent).toContain("6,400");
+    const items = document.querySelector(".basket-items")!;
+    const action = document.querySelector(".basket-review-action")!;
+    expect(items.contains(action)).toBe(false);
+    expect(items.nextElementSibling).toBe(action);
+  });
+
   it("shows the live basket until an attempt is saved, then keeps that immutable summary", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
     await render(); await click("Continue to request details");
@@ -222,6 +280,60 @@ describe("request UX increment", () => {
     expect(document.querySelector(".request-feedback")?.textContent).toContain("wait up to 15 minutes");
     expect(document.body.textContent).not.toContain("15:00");
     expect((document.getElementById("order-name") as HTMLInputElement).matches(":disabled")).toBe(false);
+  });
+});
+
+describe("WhatsApp country calling code", () => {
+  it("defaults to Nigeria and submits a national number using the unchanged international contract", async () => {
+    const fetcher = vi.fn().mockRejectedValue(new TypeError("offline")); vi.stubGlobal("fetch", fetcher);
+    await render(); await click("Continue to request details");
+    const country = document.getElementById("order-country") as HTMLSelectElement;
+    expect(country.value).toBe("NG");
+    expect(country.selectedOptions[0].textContent).toBe("Nigeria (+234)");
+    expect(country.options).toHaveLength(245);
+    const phone = document.getElementById("order-phone") as HTMLInputElement;
+    expect(phone.type).toBe("tel"); expect(phone.inputMode).toBe("tel"); expect(phone.autocomplete).toBe("tel-national");
+    await fill("order-name", "Test Customer"); await submit();
+    expect(document.activeElement).toBe(phone);
+    expect(document.querySelector(".request-feedback")?.textContent).toBe("");
+    await fill("order-phone", "0801 234 5678"); await submit();
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).details.phone).toBe("+2348012345678");
+  });
+
+  it("uses the selected calling code and retains that draft across reopening", async () => {
+    const fetcher = vi.fn().mockRejectedValue(new TypeError("offline")); vi.stubGlobal("fetch", fetcher);
+    await render(); await click("Continue to request details");
+    await fill("order-country", "GB"); await fill("order-phone", "07911 123456");
+    await fill("order-name", "Test Customer");
+    await render({ cucumber: 2 }, false); await render(); await click("Continue to request details");
+    expect((document.getElementById("order-country") as HTMLSelectElement).value).toBe("GB");
+    expect((document.getElementById("order-phone") as HTMLInputElement).value).toBe("07911 123456");
+    await submit();
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).details.phone).toBe("+447911123456");
+  });
+
+  it("restores an existing international draft without changing its canonical number", async () => {
+    const fetcher = vi.fn().mockRejectedValue(new TypeError("offline")); vi.stubGlobal("fetch", fetcher);
+    sessionStorage.setItem("zadok-request-attempt-v1", JSON.stringify({ draft: { name: "Test Customer", phone: "+447911123456", fulfilment: "pickup", delivery_address: "", note: "" } }));
+    await render(); await click("Continue to request details");
+    expect((document.getElementById("order-country") as HTMLSelectElement).value).toBe("GB");
+    expect((document.getElementById("order-phone") as HTMLInputElement).value).toBe("7911123456");
+    await submit();
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).details.phone).toBe("+447911123456");
+  });
+
+  it("projects an unresolved saved attempt without changing a byte of its retry payload", async () => {
+    const fetcher = vi.fn().mockRejectedValue(new TypeError("offline")); vi.stubGlobal("fetch", fetcher);
+    const original = JSON.stringify({ key: "cd1b443f-a666-4400-8e6c-50168cc7cd20", details: { name: "Test Customer", phone: "+390236618300", fulfilment: "pickup", delivery_address: "", note: "Saved note" }, items: [{ slug: "cucumber", quantity: 2, expectedPrice: 3200, expectedName: "Cucumber", expectedUnit: "5 kg" }] });
+    sessionStorage.setItem("zadok-request-attempt-v1", `{"attempt":${original}}`);
+    await render(); await click("Continue to request details");
+    expect((document.getElementById("order-country") as HTMLSelectElement).value).toBe("IT");
+    expect((document.getElementById("order-phone") as HTMLInputElement).value).toBe("0236618300");
+    expect((document.getElementById("order-country") as HTMLSelectElement).matches(":disabled")).toBe(true);
+    expect(sessionStorage.getItem("zadok-request-attempt-v1")).toBe(`{"attempt":${original}}`);
+    await submit(); await render({ cucumber: 3 }); await submit();
+    expect(fetcher.mock.calls[0][1].body).toBe(original);
+    expect(fetcher.mock.calls[1][1].body).toBe(original);
   });
 });
 
