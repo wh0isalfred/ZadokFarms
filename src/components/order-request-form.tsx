@@ -5,6 +5,7 @@ import { z } from "zod";
 import { RequestSummary } from "@/components/request-summary";
 import { FulfilmentChoices } from "@/components/fulfilment-choices";
 import type { Product } from "@/data/products";
+import { callingCountries, canonicalPhone, emptyPhone, restorePhone, restorePhoneDraft, type PhoneInput } from "@/lib/phone-input";
 import { orderDetailsSchema, orderRequestSchema, receiptSchema, type OrderRequest, type OrderReceipt } from "@/lib/orders/contract";
 
 const draftSchema = z.object({
@@ -16,12 +17,13 @@ const emptyDetails: z.infer<typeof draftSchema> = { name: "", phone: "", fulfilm
 const STORAGE_KEY = "zadok-request-attempt-v1";
 const fieldCopy: Record<string, string> = {
   "details.name": "Enter the name we should use for this request.",
-  "details.phone": "Enter a WhatsApp number with country code.",
+  "details.phone": "Enter your WhatsApp number and check the country calling code.",
   "details.delivery_address": "Add a delivery address so Zadok can review the request.",
 };
 
 export function OrderRequestForm({ products, quantities, active, onEditBasket }: { products: Product[]; quantities: Record<string, number>; active: boolean; onEditBasket: () => void }) {
   const [details, setDetails] = useState(emptyDetails);
+  const [phoneInput, setPhoneInput] = useState(emptyPhone);
   const [attempt, setAttempt] = useState<OrderRequest | null>(null);
   const [receipt, setReceipt] = useState<OrderReceipt | null>(null);
   const [keyConflict, setKeyConflict] = useState(false);
@@ -57,11 +59,16 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
         const savedReceipt = receiptSchema.safeParse(stored?.receipt);
         const savedAttempt = orderRequestSchema.safeParse(stored?.attempt);
         if (savedReceipt.success) setReceipt(savedReceipt.data);
-        else if (draftSchema.safeParse(stored?.draft).success) setDetails(draftSchema.parse(stored.draft));
+        else if (draftSchema.safeParse(stored?.draft).success) {
+          const draft = draftSchema.parse(stored.draft);
+          setDetails(draft);
+          setPhoneInput(restorePhoneDraft(draft.phone, stored.phoneInput));
+        }
         else if (savedAttempt.success) {
           setAttempt(savedAttempt.data);
           setKeyConflict(stored.conflict === true);
           setDetails(savedAttempt.data.details);
+          setPhoneInput(restorePhone(savedAttempt.data.details.phone));
           setMessage(stored.conflict === true ? "The saved request no longer matches its original reference key. Review your details before starting a new request." : "An unfinished request is saved in this tab. Retry it to check whether it was accepted.");
         }
       } catch { /* Submission checks storage before sending anything. */ }
@@ -79,7 +86,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
     }
   }, [active, message, receipt]);
 
-  function updateDetails(next: typeof details) {
+  function updateDetails(next: typeof details, nextPhone = phoneInput) {
     setDetails(next);
     const checked = orderDetailsSchema.safeParse(next);
     const invalid = new Set(checked.success ? [] : checked.error.issues.map((issue) => `details.${String(issue.path[0])}`));
@@ -88,8 +95,16 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       return !(next[field] !== details[field] && !invalid.has(key)) &&
         !(key === "details.delivery_address" && next.fulfilment !== "delivery");
     })));
-    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ draft: next })); }
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ draft: next, phoneInput: nextPhone })); }
     catch { /* Submission will fail closed if retry storage is unavailable. */ }
+  }
+
+  function updatePhone(next: PhoneInput) {
+    const canonical = canonicalPhone(next);
+    const input = next.national.trim().startsWith("+") && canonical
+      ? restorePhone(canonical, next.country) : next;
+    setPhoneInput(input);
+    updateDetails({ ...details, phone: canonical }, input);
   }
 
   function recoverConflict() {
@@ -107,6 +122,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       return;
     }
     setDetails(attempt.details);
+    setPhoneInput(restorePhone(attempt.details.phone));
     setAttempt(null);
     setKeyConflict(false);
     setErrors({});
@@ -158,6 +174,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       if (response.ok && accepted.success) {
         setReceipt(accepted.data);
         setDetails(emptyDetails);
+        setPhoneInput(emptyPhone);
         // Replace the retry payload with a receipt; no name or phone remains in storage.
         try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ receipt: accepted.data })); }
         catch { sessionStorage.removeItem(STORAGE_KEY); }
@@ -165,7 +182,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       }
       // Only definitive pre-commit rejections permit editing. An unknown outcome keeps the same payload/key.
       if ([409, 422, 429].includes(response.status) && "code" in data && data.code !== "key_conflict") {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ draft: details }));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ draft: details, phoneInput }));
         setAttempt(null);
       }
       if (response.status === 409 && "code" in data && data.code === "key_conflict") {
@@ -204,11 +221,21 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
         <label htmlFor="order-name">Full name</label>
         <input id="order-name" name="name" value={details.name} onChange={(event) => updateDetails({ ...details, name: event.target.value })} autoComplete="name" required maxLength={120} aria-invalid={!!errors["details.name"]} aria-describedby={errors["details.name"] ? "order-name-error" : undefined} />
         {errors["details.name"] && <p className="field-error" id="order-name-error">{errors["details.name"]}</p>}
+        </div></div>
+        <div className="phone-fields">
+        <div>
+        <label htmlFor="order-country">Country calling code</label>
+        <select id="order-country" name="phone_country" autoComplete="tel-country-code" value={phoneInput.country}
+          onChange={(event) => updatePhone({ country: event.target.value, national: phoneInput.country === "" ? "" : phoneInput.national })}>
+          {phoneInput.country === "" && <option value="">Saved international number</option>}
+          {callingCountries.map((country) => <option key={country.id} value={country.id}>{country.name} (+{country.callingCode})</option>)}
+        </select>
         </div><div>
-        <label htmlFor="order-phone">WhatsApp number (with country code)</label>
-        <input id="order-phone" name="phone" value={details.phone} onChange={(event) => updateDetails({ ...details, phone: event.target.value })} type="tel" autoComplete="tel" required maxLength={30} placeholder="+2348012345678" aria-invalid={!!errors["details.phone"]} aria-describedby={errors["details.phone"] ? "order-phone-error" : undefined} />
+        <label htmlFor="order-phone">WhatsApp number</label>
+        <input id="order-phone" name="phone" value={phoneInput.national} onChange={(event) => updatePhone({ ...phoneInput, national: event.target.value })} type="tel" inputMode="tel" autoComplete="tel-national" required maxLength={30} placeholder={phoneInput.country === "NG" ? "0801 234 5678" : undefined} aria-invalid={!!errors["details.phone"]} aria-describedby={`order-phone-help${errors["details.phone"] ? " order-phone-error" : ""}`} />
         {errors["details.phone"] && <p className="field-error" id="order-phone-error">{errors["details.phone"]}</p>}
         </div></div>
+        <p className="basket-note phone-help" id="order-phone-help">{phoneInput.country === "" ? "Your saved international number is preserved. Choose a country to enter a different number." : "Enter your number as you dial it locally, including the area code. You can also paste a full international number."}</p>
         </section>
         <FulfilmentChoices value={details.fulfilment} onChange={(fulfilment) => updateDetails({ ...details, fulfilment })} />
         {details.fulfilment === "delivery" && <section className="delivery-fields" aria-labelledby="address-label">
