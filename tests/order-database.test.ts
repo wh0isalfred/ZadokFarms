@@ -151,6 +151,35 @@ describe.skipIf(!adminUrl)("PostgreSQL order transaction", () => {
     expect(lines[2]).toBe("2");
   });
 
+  it.each([
+    ["anon", "", false, "staff", 0],
+    ["authenticated", "", false, "staff", 0],
+    ["authenticated", "11111111-1111-4111-8111-111111111111", false, "staff", 0],
+    ["authenticated", "22222222-2222-4222-8222-222222222222", false, "staff", 0],
+    ["authenticated", "11111111-1111-4111-8111-111111111111", true, "staff", 1],
+    ["authenticated", "11111111-1111-4111-8111-111111111111", true, "admin", 1],
+    ["authenticated", "11111111-1111-4111-8111-111111111111", true, "owner", 1],
+  ])("RLS protects customer/order snapshots: %s %s active=%s role=%s", async (role, user, active, staffRole, visible) => {
+    const output = await sql(`begin;
+      create or replace function auth.uid() returns uuid language sql stable as
+        'select nullif(current_setting(''request.jwt.claim.sub'', true), '''')::uuid';
+      insert into auth.users(id) values ('11111111-1111-4111-8111-111111111111'), ('22222222-2222-4222-8222-222222222222');
+      insert into public.staff_profiles(id,full_name,role,active) values ('11111111-1111-4111-8111-111111111111','Staff fixture','${staffRole}',${active});
+      ${call(randomUUID())}
+      -- Hosted Supabase supplies table grants; allow SELECT here to exercise RLS itself.
+      grant select on public.customers, public.order_requests, public.order_items, public.order_status_events, public.staff_profiles to anon,authenticated;
+      set local request.jwt.claim.sub = '${user}'; set local role ${role};
+      select json_build_array((select count(*) from public.customers),(select count(*) from public.order_requests),(select count(*) from public.order_items),(select count(*) from public.order_status_events));
+      reset role;
+      update public.staff_profiles set active=false;
+      set local role ${role};
+      select count(*) from public.order_requests;
+      rollback;`);
+    const lines = output.split(/\r?\n/);
+    expect(JSON.parse(lines[1])).toEqual([visible, visible, visible, visible]);
+    expect(lines[2]).toBe("0");
+  });
+
   it("deduplicates concurrent HTTP submissions through the real RPC", async () => {
     const key = randomUUID();
     const input = { key, ...payload };
@@ -162,4 +191,5 @@ describe.skipIf(!adminUrl)("PostgreSQL order transaction", () => {
     expect(new Set(bodies.map((body) => body.receipt.reference)).size).toBe(1);
     expect(await sql(`select count(*) from public.order_requests where reference = ${literal(bodies[0].receipt.reference)};`)).toBe("1");
   });
+
 });

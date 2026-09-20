@@ -1,0 +1,1 @@
+﻿export default function Loading() { return <main className="desk-loading" role="status"><p className="desk-eyebrow">ZADOK DESK</p><h1>Opening orders…</h1><p>Checking access and loading requests.</p><div className="desk-loading-line" /></main>; }
