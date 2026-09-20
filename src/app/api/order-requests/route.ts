@@ -18,5 +18,5 @@ export async function POST(request: Request) {
     p_payload: { details: input.details, items: input.items },
     p_fingerprint: fingerprint,
     p_phone_hash: phoneHash,
-  }), hashSecret);
+  }), hashSecret, process.env.ZADOK_WHATSAPP_BUSINESS_NUMBER);
 }

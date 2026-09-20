@@ -35,3 +35,20 @@ export const receiptSchema = z.object({
 });
 export type OrderRequest = z.infer<typeof orderRequestSchema>;
 export type OrderReceipt = z.infer<typeof receiptSchema>;
+
+// Backwards compatible with receipts saved before the handoff milestone.
+// A damaged optional link must never hide an otherwise valid recorded reference.
+export const recordedReceiptSchema = receiptSchema.extend({
+  fulfilment: z.enum(["pickup", "delivery", "to_confirm"]).optional().catch(undefined),
+  delivery_address: z.string().max(500).optional().catch(undefined),
+  whatsappUrl: z.string().max(30000).refine((value) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && url.hostname === "wa.me" && !url.port &&
+        !url.username && !url.password && !url.hash && /^\/[1-9][0-9]{6,14}$/.test(url.pathname) &&
+        url.searchParams.has("text") && [...url.searchParams.keys()].every((key) => key === "text");
+    } catch { return false; }
+  }).nullish().catch(null),
+});
+export type RecordedReceipt = z.infer<typeof recordedReceiptSchema>;
+export const REQUEST_STORAGE_KEY = "zadok-request-attempt-v1";

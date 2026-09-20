@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import Image from "next/image";
 import type { Product } from "@/data/products";
 import { formatNaira } from "@/data/products";
 import { useRequestStep } from "@/components/use-request-step";
 import { OrderRequestForm } from "@/components/order-request-form";
+import { RequestRecorded } from "@/components/request-recorded";
+import { REQUEST_STORAGE_KEY, type RecordedReceipt } from "@/lib/orders/contract";
 
 type BasketDrawerProps = {
   open: boolean;
@@ -21,10 +23,32 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
   const drawerRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);
+  const [receipt, setReceipt] = useState<RecordedReceipt | null>(null);
+  const [storageFailed, setStorageFailed] = useState(false);
+  const requestGeneration = useRef(0);
+  const [generation, setGeneration] = useState(0);
   const items = products.filter((product) => (quantities[product.id] ?? 0) > 0);
   const total = items.reduce((sum, product) => sum + product.price * quantities[product.id], 0);
 
-  const { detailsOpen, showDetails, showReview } = useRequestStep(open, items.length > 0);
+  const { detailsOpen, showDetails, showReview } = useRequestStep(open, items.length > 0 || !!receipt);
+  const revealReceipt = useEffectEvent(() => { if (open && receipt) showDetails(); });
+  useEffect(() => { queueMicrotask(() => revealReceipt()); }, [open, receipt]);
+  function record(accepted: RecordedReceipt, failed: boolean) {
+    requestGeneration.current += 1;
+    setGeneration((current) => current + 1);
+    setStorageFailed(failed);
+    setReceipt(accepted);
+  }
+  function startAnother() {
+    try { sessionStorage.removeItem(REQUEST_STORAGE_KEY); }
+    catch { return "We could not reset the saved request in this tab. Your recorded request is still shown."; }
+    requestGeneration.current += 1;
+    setGeneration((current) => current + 1);
+    setReceipt(null);
+    setStorageFailed(false);
+    showReview();
+    return null;
+  }
   const closeDrawer = useEffectEvent(() => { showReview(); onClose(); });
   function close() { showReview(); onClose(); }
 
@@ -64,21 +88,21 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
     };
   }, [open]);
 
-  useEffect(() => { if (open) headingRef.current?.focus(); }, [detailsOpen, open]);
+  useEffect(() => { if (open) headingRef.current?.focus(); }, [detailsOpen, open, receipt]);
 
   if (!open) return null;
 
   return (
     <div className="drawer-layer open">
       <button className="drawer-backdrop" type="button" onClick={close} aria-label="Close your basket" />
-      <aside className="basket-drawer" aria-describedby={detailsOpen ? "order-details-note" : items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
+      <aside className="basket-drawer" aria-describedby={detailsOpen ? receipt ? "recorded-note" : "order-details-note" : items.length > 0 ? "basket-request-note" : undefined} aria-labelledby="basket-title" aria-modal="true" ref={drawerRef} role="dialog">
         <div className="drawer-heading">
-          <div>{detailsOpen && <button className="request-back" type="button" onClick={showReview}>Back to basket</button>}<p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title" ref={headingRef} tabIndex={-1}>{detailsOpen ? "Request details" : "Your basket"}</h2></div>
+          <div>{detailsOpen && <button className="request-back" type="button" onClick={showReview}>Back to basket</button>}<p className="eyebrow">ORDER REQUEST</p><h2 id="basket-title" ref={headingRef} tabIndex={-1}>{detailsOpen ? receipt ? "Request recorded" : "Request details" : "Your basket"}</h2></div>
           <button ref={closeButtonRef} type="button" onClick={close} aria-label="Close your basket">×</button>
         </div>
         <div className="drawer-step basket-review" hidden={detailsOpen}>
         {items.length === 0 ? (
-          <div className="empty-basket"><p>Your basket is empty.</p><button type="button" onClick={close}>Continue shopping</button></div>
+          <div className="empty-basket"><p>Your basket is empty.</p>{receipt && <button type="button" onClick={showDetails}>View recorded request</button>}<button type="button" onClick={close}>Continue shopping</button></div>
         ) : (
           <>
             <div className="basket-items">
@@ -99,12 +123,13 @@ export function BasketDrawer({ open, products, quantities, onClose, onAdd, onDec
             </div>
             <div className="basket-review-action"><div className="basket-summary"><span>Estimated produce subtotal</span><strong>{formatNaira(total)}</strong></div>
             <p className="basket-note" id="basket-request-note">Final quantity, availability and fulfilment will be confirmed after you submit your request.</p>
-            <button className="checkout-button" type="button" onClick={showDetails}>Continue to request details</button></div>
+            <button className="checkout-button" type="button" onClick={showDetails}>{receipt ? "View recorded request" : "Continue to request details"}</button></div>
           </>
         )}
         </div>
         <div className="drawer-step" hidden={!detailsOpen}>
-          <OrderRequestForm products={products} quantities={quantities} active={detailsOpen} onEditBasket={showReview} />
+          {receipt ? <RequestRecorded receipt={receipt} storageFailed={storageFailed} onStartAnother={startAnother} /> :
+            <OrderRequestForm products={products} quantities={quantities} active={detailsOpen} onEditBasket={showReview} onRecorded={record} isCurrentRequest={() => requestGeneration.current === generation} />}
         </div>
       </aside>
     </div>

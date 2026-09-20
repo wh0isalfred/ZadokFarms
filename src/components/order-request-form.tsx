@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useEffectEvent, useRef, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { RequestSummary } from "@/components/request-summary";
 import { FulfilmentChoices } from "@/components/fulfilment-choices";
 import type { Product } from "@/data/products";
 import { callingCountries, canonicalPhone, emptyPhone, restorePhone, restorePhoneDraft, type PhoneInput } from "@/lib/phone-input";
-import { orderDetailsSchema, orderRequestSchema, receiptSchema, type OrderRequest, type OrderReceipt } from "@/lib/orders/contract";
+import { orderDetailsSchema, orderRequestSchema, recordedReceiptSchema, REQUEST_STORAGE_KEY, type OrderRequest, type RecordedReceipt } from "@/lib/orders/contract";
 
 const draftSchema = z.object({
   name: z.string().max(120), phone: z.string().max(30),
@@ -14,18 +14,17 @@ const draftSchema = z.object({
   delivery_address: z.string().max(500), note: z.string().max(500),
 });
 const emptyDetails: z.infer<typeof draftSchema> = { name: "", phone: "", fulfilment: "to_confirm", delivery_address: "", note: "" };
-const STORAGE_KEY = "zadok-request-attempt-v1";
+const STORAGE_KEY = REQUEST_STORAGE_KEY;
 const fieldCopy: Record<string, string> = {
   "details.name": "Enter the name we should use for this request.",
   "details.phone": "Enter your WhatsApp number and check the country calling code.",
   "details.delivery_address": "Add a delivery address so Zadok can review the request.",
 };
 
-export function OrderRequestForm({ products, quantities, active, onEditBasket }: { products: Product[]; quantities: Record<string, number>; active: boolean; onEditBasket: () => void }) {
+export function OrderRequestForm({ products, quantities, active, onEditBasket, onRecorded, isCurrentRequest }: { products: Product[]; quantities: Record<string, number>; active: boolean; onEditBasket: () => void; onRecorded: (receipt: RecordedReceipt, storageFailed: boolean) => void; isCurrentRequest: () => boolean }) {
   const [details, setDetails] = useState(emptyDetails);
   const [phoneInput, setPhoneInput] = useState(emptyPhone);
   const [attempt, setAttempt] = useState<OrderRequest | null>(null);
-  const [receipt, setReceipt] = useState<OrderReceipt | null>(null);
   const [keyConflict, setKeyConflict] = useState(false);
   const [pending, setPending] = useState(false);
   const [ready, setReady] = useState(false);
@@ -35,6 +34,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
   const feedback = useRef<HTMLParagraphElement>(null);
   const scrollRegion = useRef<HTMLDivElement>(null);
   const focusInvalid = useRef(false);
+  const recoverReceipt = useEffectEvent((receipt: RecordedReceipt) => onRecorded(receipt, false));
 
   useEffect(() => {
     if (!active || !focusInvalid.current) return;
@@ -56,9 +56,9 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
       if (!active) return;
       try {
         const stored = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "null");
-        const savedReceipt = receiptSchema.safeParse(stored?.receipt);
+        const savedReceipt = recordedReceiptSchema.safeParse(stored?.receipt);
         const savedAttempt = orderRequestSchema.safeParse(stored?.attempt);
-        if (savedReceipt.success) setReceipt(savedReceipt.data);
+        if (savedReceipt.success) recoverReceipt(savedReceipt.data);
         else if (draftSchema.safeParse(stored?.draft).success) {
           const draft = draftSchema.parse(stored.draft);
           setDetails(draft);
@@ -78,13 +78,13 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
   }, []);
 
   useEffect(() => {
-    if (active && (message || receipt)) {
+    if (active && message) {
       // A basket rejection can coexist with contact errors; field focus takes priority.
-      if (!receipt && scrollRegion.current?.querySelector('[aria-invalid="true"]:not(:disabled)')) return;
+      if (scrollRegion.current?.querySelector('[aria-invalid="true"]:not(:disabled)')) return;
       feedback.current?.focus({ preventScroll: true });
       feedback.current?.scrollIntoView?.({ block: "center", behavior: "instant" });
     }
-  }, [active, message, receipt]);
+  }, [active, message]);
 
   function updateDetails(next: typeof details, nextPhone = phoneInput) {
     setDetails(next);
@@ -108,7 +108,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
   }
 
   function recoverConflict() {
-    if (!keyConflict || !attempt || pending || receipt) return;
+    if (!keyConflict || !attempt || pending) return;
     try {
       const stored = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? "null");
       if (stored?.receipt || (stored?.attempt && stored.attempt.key !== attempt.key)) {
@@ -131,7 +131,7 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy.current || receipt || keyConflict) return;
+    if (busy.current || keyConflict) return;
 
     const parsed = orderRequestSchema.safeParse(attempt ?? {
       key: crypto.randomUUID(),
@@ -169,15 +169,20 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
         body: JSON.stringify(submitted), signal: AbortSignal.timeout(20000),
       });
       const result: unknown = await response.json();
+      // Closing may allow another form to retry the same key. Once one response
+      // records it, later responses must not replace its receipt or a new draft.
+      if (!isCurrentRequest()) return;
       const data = result && typeof result === "object" ? result : {};
-      const accepted = receiptSchema.safeParse("receipt" in data ? data.receipt : null);
+      const accepted = recordedReceiptSchema.safeParse("receipt" in data ? data.receipt : null);
       if (response.ok && accepted.success) {
-        setReceipt(accepted.data);
-        setDetails(emptyDetails);
-        setPhoneInput(emptyPhone);
-        // Replace the retry payload with a receipt; no name or phone remains in storage.
+        // Keep only the receipt and its handoff; no customer name/phone or retry key.
+        let storageFailed = false;
         try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ receipt: accepted.data })); }
-        catch { sessionStorage.removeItem(STORAGE_KEY); }
+        catch {
+          storageFailed = true;
+          try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* Keep the in-memory confirmation. */ }
+        }
+        onRecorded(accepted.data, storageFailed);
         return;
       }
       // Only definitive pre-commit rejections permit editing. An unknown outcome keeps the same payload/key.
@@ -205,16 +210,16 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
     }
   }
 
-  const summaryItems = receipt?.items ?? (attempt
+  const summaryItems = attempt
     ? attempt.items.map((item) => ({ name: item.expectedName, unit: item.expectedUnit, price: item.expectedPrice, quantity: item.quantity }))
-    : products.filter((product) => quantities[product.id] > 0).map((product) => ({ name: product.name, unit: product.unit, price: product.price, quantity: quantities[product.id] })));
+    : products.filter((product) => quantities[product.id] > 0).map((product) => ({ name: product.name, unit: product.unit, price: product.price, quantity: quantities[product.id] }));
 
   return (
     <form className="order-request-form" onSubmit={submit} noValidate aria-busy={pending}>
       <div className="request-scroll" ref={scrollRegion}>
-      <RequestSummary items={summaryItems} saved={!!attempt} recorded={!!receipt} onEdit={onEditBasket} />
+      <RequestSummary items={summaryItems} saved={!!attempt} recorded={false} onEdit={onEditBasket} />
       <p className="basket-note request-intro" id="order-details-note">Tell us how to reach you and how you would prefer to receive your produce. This is a request, not a completed purchase.</p>
-      <fieldset className="request-fields" disabled={!ready || pending || !!attempt || !!receipt} aria-describedby="order-details-note">
+      <fieldset className="request-fields" disabled={!ready || pending || !!attempt} aria-describedby="order-details-note">
         <section className="request-contact" aria-labelledby="contact-title">
         <h3 id="contact-title">Your contact details</h3>
         <div className="contact-fields"><div>
@@ -254,18 +259,18 @@ export function OrderRequestForm({ products, quantities, active, onEditBasket }:
         {errors["details.note"] && <p className="field-error" id="order-note-error">{errors["details.note"]}</p>}
         </div>
       </fieldset>
-      {attempt && !receipt && <p className="basket-note">Details are locked while this saved request is unresolved, so retrying cannot change what was submitted.</p>}
-      <p ref={feedback} tabIndex={-1} role={receipt ? "status" : "alert"} className="request-feedback">
-        {receipt ? `Request recorded: ${receipt.reference}. Availability, fulfilment and payment are not confirmed.` : message}
+      {attempt && <p className="basket-note">Details are locked while this saved request is unresolved, so retrying cannot change what was submitted.</p>}
+      <p ref={feedback} tabIndex={-1} role="alert" className="request-feedback">
+        {message}
       </p>
-      {keyConflict && !receipt && <button className="conflict-recovery" type="button" onClick={recoverConflict}>Clear saved retry and review details</button>}
+      {keyConflict && <button className="conflict-recovery" type="button" onClick={recoverConflict}>Clear saved retry and review details</button>}
       <p className="draft-note">Unfinished details stay in this tab for safe retries.</p>
       </div>
       <div className="request-action">
       <p className="basket-note">Zadok confirms availability and fulfilment, then shares payment details on WhatsApp afterward.</p>
       <span className="sr-only" role="status">{pending ? "Submitting request…" : ""}</span>
-      <button className="checkout-button" disabled={!ready || pending || !!receipt || keyConflict} type="submit">
-        {pending ? "Submitting request…" : receipt ? "Request recorded" : attempt ? "Retry saved request" : "Submit request"}
+      <button className="checkout-button" disabled={!ready || pending || keyConflict} type="submit">
+        {pending ? "Submitting request…" : attempt ? "Retry saved request" : "Submit request"}
       </button></div>
     </form>
   );

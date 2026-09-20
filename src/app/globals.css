@@ -492,6 +492,25 @@ main { display: block; }
 .field-error { margin: 6px 0 0; color: #9b2020; font-size: .9rem; }
 .request-feedback { overflow-wrap: anywhere; line-height: 1.5; margin: 20px 0 12px; }
 .request-feedback:empty { margin: 0; }
+.recorded-request { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.recorded-request h3 { margin: 0 0 12px; font-size: 1.1rem; }
+.recorded-request h4 { margin: 20px 0 8px; font-size: .95rem; }
+.recorded-request p { line-height: 1.5; }
+.recorded-kicker { margin: 0 0 24px; color: var(--field); }
+.recorded-reference-label { margin: 0 0 6px; color: var(--muted); font-size: .85rem; }
+.recorded-reference { margin: 0 0 16px; font-size: clamp(1.15rem, 4.5vw, 1.5rem); font-weight: 700; letter-spacing: .025em; overflow-wrap: anywhere; }
+.recorded-items { margin-top: 28px; }
+.recorded-items ul { list-style: none; margin: 0; padding: 0; }
+.recorded-items li { display: flex; align-items: start; justify-content: space-between; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.recorded-items li div { min-width: 0; overflow-wrap: anywhere; }
+.recorded-items li span { display: block; margin-top: 5px; color: var(--muted); font-size: .85rem; line-height: 1.5; }
+.recorded-items li > strong { flex-shrink: 0; font-size: .9rem; }
+.recorded-subtotal { display: flex; justify-content: space-between; gap: 18px; padding: 18px 0 10px; }
+.recorded-fulfilment { padding-top: 20px; border-top: 1px solid var(--border); }
+.recorded-address { white-space: pre-wrap; overflow-wrap: anywhere; }
+.start-another-request { min-height: 44px; margin-top: 12px; padding: 10px 0; border: 0; background: transparent; color: var(--foreground); font: inherit; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.whatsapp-handoff { display: flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px; text-decoration: none; background: var(--field); color: white; text-align: center; }
+.recorded-action > .basket-note:last-child { margin-bottom: 0; }
 .request-feedback:not(:empty) { border-left: 3px solid var(--field); padding: 12px 0 12px 14px; }
 .draft-note { margin: 20px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
 .request-feedback, .order-request-form input, .order-request-form textarea { scroll-margin-block: 24px; }
