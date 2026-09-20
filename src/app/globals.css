@@ -79,6 +79,14 @@ main { display: block; }
 .catalogue-sweep path:nth-child(2) { animation-delay: .1s; }
 .catalogue-sweep path:nth-child(3) { animation-delay: .2s; }
 @keyframes cultivate-line { from { stroke-dashoffset: 1400; } to { stroke-dashoffset: 0; } }
+/* Upper field rows are decorative; keep the original catalogue geometry intact. */
+.catalogue-opening-bands { position: absolute; z-index: 0; top: -48px; right: -20px; width: min(74vw, 1040px); height: 200px; opacity: .15; pointer-events: none; }
+.catalogue-opening-bands path { stroke: var(--sage); stroke-width: 14px; }
+.desktop-filters button[aria-pressed="true"] { border-color: var(--sage); background: color-mix(in srgb,var(--sage) 26%,var(--background)); color: var(--field); }
+.catalogue-sort { position: relative; display: flex; align-items: center; }
+.catalogue-sort select { appearance: none; min-height: 44px; padding: 0 32px 0 16px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--foreground); font: inherit; cursor: pointer; }
+.catalogue-sort select:focus-visible { outline: 3px solid var(--community); outline-offset: 3px; }
+.catalogue-sort svg { position: absolute; right: 8px; width: 16px; height: 16px; pointer-events: none; }
 .catalogue-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .category-list { display: flex; gap: 6px; }
 .category-list button, .desktop-filters button { min-height: 44px; padding: 0 16px; border: 1px solid transparent; border-radius: 7px; background: transparent; cursor: pointer; }
@@ -319,7 +327,10 @@ main { display: block; }
   .category-list { gap: 4px; padding: 4px; overflow-x: auto; scrollbar-width: none; }
   .category-list::-webkit-scrollbar { display: none; }
   .category-list button { min-height: 44px; flex: 0 0 auto; padding: 0 12px; border-color: transparent; border-radius: 7px; font-size: .82rem; }
-  .desktop-filters { display: none; }
+  .desktop-filters { display: flex; justify-content: space-between; margin: 8px 4px 0; }
+  .desktop-filters button, .catalogue-sort select { padding-left: 12px; font-size: .82rem; }
+  .catalogue-opening-bands { top: 0; right: -16px; width: 480px; height: 200px; opacity: .15; }
+  .catalogue-opening-bands path { stroke-width: 16px; }
   .catalogue-heading { padding: 0 0 18px; }
   .catalogue-heading > div { display: block; }
   .catalogue-heading h1 { font-size: clamp(2rem,8.3vw,3rem); }
