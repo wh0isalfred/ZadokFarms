@@ -9,6 +9,14 @@ type ProductCardProps = {
   onDecrease: () => void;
 };
 
+// Versioned replacements avoid stale optimized images; custom catalogue images stay authoritative.
+const harvestImages: Record<string, string> = {
+  "/images/products/habanero.jpg": "/images/products/habanero-harvest.jpg",
+  "/images/products/bell-pepper.jpg": "/images/products/bell-pepper-harvest.jpg",
+  "/images/products/cucumber.jpg": "/images/products/cucumber-harvest.jpg",
+  "/images/products/tomatoes.jpg": "/images/products/tomatoes-harvest.jpg",
+};
+
 const statusText = {
   available: "Available to request",
   limited: "Limited",
@@ -20,9 +28,9 @@ export function ProductCard({ product, quantity, onAdd, onDecrease }: ProductCar
 
   return (
     <article className="product-card">
-      <a className="product-image" href={`#${product.id}`} aria-label={`View ${product.name}`}>
-        <Image src={product.image} alt={product.imageAlt ?? product.name} fill sizes="(max-width: 699px) 50vw, (max-width: 1099px) 33vw, 25vw" />
-      </a>
+      <div className="product-image">
+        <Image src={harvestImages[product.image] ?? product.image} alt={product.imageAlt ?? product.name} fill sizes="(max-width: 1099px) 50vw, (max-width: 1720px) 25vw, 400px" />
+      </div>
       <div className="product-info">
         <h3>{product.name}</h3>
         <p className="product-price">
@@ -31,7 +39,7 @@ export function ProductCard({ product, quantity, onAdd, onDecrease }: ProductCar
         </p>
         <p className={`product-status ${product.status}`}><span aria-hidden="true" />{statusText[product.status]}</p>
         {unavailable ? (
-          <a className="product-action secondary" href={`#${product.id}`}>View details</a>
+          <span className="product-action secondary unavailable-action">Not available to request</span>
         ) : quantity > 0 ? (
           <div className="quantity-control" aria-label={`${product.name} quantity`}>
             <button type="button" onClick={onDecrease} aria-label={`Remove one ${product.name}`}>−</button>
