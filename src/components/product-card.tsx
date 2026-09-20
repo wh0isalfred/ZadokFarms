@@ -16,12 +16,13 @@ const statusText = {
 };
 
 export function ProductCard({ product, quantity, onAdd, onDecrease }: ProductCardProps) {
+  const nurseryImage = product.id === "seedlings" && product.image === "/images/products/seedlings.jpg";
   const unavailable = product.status === "unavailable";
 
   return (
     <article className="product-card">
       <a className="product-image" href={`#${product.id}`} aria-label={`View ${product.name}`}>
-        <Image src={product.image} alt={product.imageAlt ?? product.name} fill sizes="(max-width: 699px) 50vw, (max-width: 1099px) 33vw, 25vw" />
+        <Image src={nurseryImage ? "/images/products/seedlings-nursery.jpg" : product.image} alt={nurseryImage ? "Young seedlings in individual black nursery grow-bags with visible soil" : product.imageAlt ?? product.name} fill sizes="(max-width: 699px) 50vw, (max-width: 1099px) 33vw, 25vw" />
       </a>
       <div className="product-info">
         <h3>{product.name}</h3>

@@ -23,14 +23,29 @@ function CatalogueSweep({ className = "" }: { className?: string }) {
 export function Storefront({ products }: { products: Product[] }) {
   const [category, setCategory] = useState<Category>("All produce");
   const [query, setQuery] = useState("");
+  const [availableOnly, setAvailableOnly] = useState(false);
+  const [sort, setSort] = useState("farm");
   const [showSearch, setShowSearch] = useState(false);
   const [basketOpen, setBasketOpen] = useState(false);
   const { quantities, add, decrease } = useBasket(products);
 
-  const visibleProducts = useMemo(() => products.filter((product) => {
-    const categoryMatch = category === "All produce" || product.category === category;
-    return categoryMatch && product.name.toLowerCase().includes(query.trim().toLowerCase());
-  }), [category, products, query]);
+  const visibleProducts = useMemo(() => {
+    const matches = products.filter((product) => {
+      const categoryMatch = category === "All produce" || product.category === category;
+      const availabilityMatch = !availableOnly || product.status === "available" || product.status === "limited";
+      return categoryMatch && availabilityMatch && product.name.toLowerCase().includes(query.trim().toLowerCase());
+    });
+    // The incoming array already follows Supabase display_order. Never sort it in place.
+    if (sort !== "farm") matches.sort((a, b) => (sort === "name-asc" ? 1 : -1) * a.name.localeCompare(b.name, "en"));
+    return matches;
+  }, [availableOnly, category, products, query, sort]);
+
+  function resetFilters() {
+    setCategory("All produce");
+    setQuery("");
+    setAvailableOnly(false);
+    setSort("farm");
+  }
 
   const basketCount = Object.values(quantities).reduce((sum, quantity) => sum + quantity, 0);
   useEffect(() => {
@@ -51,7 +66,7 @@ export function Storefront({ products }: { products: Product[] }) {
 
     revealItems.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
-  }, [category, query]);
+  }, [availableOnly, category, query, sort]);
 
   return (
     <>
@@ -63,8 +78,17 @@ export function Storefront({ products }: { products: Product[] }) {
             <SearchIcon /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search produce" aria-label="Search produce" autoFocus={showSearch} />{query && <button type="button" onClick={() => setQuery("")}>Clear</button>}
           </section>
           <section className="catalogue" id="produce">
-            <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices and availability may change. Zadok confirms fulfilment and payment afterward.</p></div><button type="button" onClick={() => { setCategory("All produce"); setQuery(""); }}>View all produce</button></div>
-            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" aria-pressed={category === item} onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters"><button type="button"><span>Available now</span><ChevronIcon /></button><button type="button"><span>Sort</span><ChevronIcon /></button></div></div>
+            <svg className="catalogue-lines catalogue-opening-bands" viewBox="0 0 800 240" preserveAspectRatio="none" fill="none" aria-hidden="true" focusable="false">
+              <path d="M0 144L800 -56" /><path d="M0 184L800 -16" />
+              <path d="M0 224L800 24" /><path d="M0 264L800 64" />
+            </svg>
+            <div className="catalogue-heading"><div><h1>Available from the farm</h1><p>Prices and availability may change. Zadok confirms fulfilment and payment afterward.</p></div><button type="button" onClick={resetFilters}>View all produce</button></div>
+            <div className="catalogue-toolbar"><div className="category-list" aria-label="Produce categories">{categories.map((item) => <button className={category === item ? "active" : ""} type="button" aria-pressed={category === item} onClick={() => setCategory(item)} key={item}>{item}{item === "All produce" ? ` (${products.length})` : ""}</button>)}</div><div className="desktop-filters">
+              <button type="button" aria-pressed={availableOnly} onClick={() => setAvailableOnly((value) => !value)}>Available now</button>
+              <label className="catalogue-sort"><select aria-label="Sort produce" value={sort} onChange={(event) => setSort(event.target.value)}>
+                <option value="farm">Sort: farm order</option><option value="name-asc">Name: A-Z</option><option value="name-desc">Name: Z-A</option>
+              </select><ChevronIcon /></label>
+            </div></div>
             {visibleProducts.length > 0 ? (
               <div className="product-grid">
                 {visibleProducts.map((product, index) => (
@@ -83,7 +107,7 @@ export function Storefront({ products }: { products: Product[] }) {
                 ))}
                 {category === "All produce" && !query && <><CatalogueSweep /><FarmStory /></>}
               </div>
-            ) : <div className="no-results"><p>{products.length === 0 ? "No produce is currently published." : <>No produce matches “{query}”.</>}</p><button type="button" onClick={() => { setQuery(""); setCategory("All produce"); }}>Show all produce</button></div>}
+            ) : <div className="no-results"><p>{products.length === 0 ? "No produce is currently published." : <>No produce matches these filters{query ? ` for "${query}"` : ""}.</>}</p><button type="button" onClick={resetFilters}>Show all produce</button></div>}
           </section>
           <BulkSupply />
           <OrderSteps />
