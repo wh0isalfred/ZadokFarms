@@ -2,7 +2,7 @@ import { FarmIcon, MenuIcon, ServicesIcon, ShopIcon, TrainingIcon } from "@/comp
 
 const items = [
   { label: "Shop", href: "#produce", Icon: ShopIcon },
-  { label: "Training", href: "#training", Icon: TrainingIcon },
+  { label: "Training", href: "/training", Icon: TrainingIcon },
   { label: "Services", href: "#services", Icon: ServicesIcon },
   { label: "Our farm", href: "#farm", Icon: FarmIcon },
   { label: "Menu", href: "#footer", Icon: MenuIcon },
