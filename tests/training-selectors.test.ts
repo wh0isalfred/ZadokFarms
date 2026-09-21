@@ -230,3 +230,145 @@ it("handles empty programme list", () => {
   expect(getMoreProgrammes(empty)).toHaveLength(0);
   expect(getPreviousProgrammes(empty)).toHaveLength(0);
 });
+
+it("filters out programmes with invalid start dates from getNextProgramme", () => {
+  const withInvalidDate: TrainingProgramme[] = [
+    {
+      id: "invalid",
+      slug: "invalid",
+      title: "Invalid Date",
+      summary: "Invalid date",
+      coverImage: { src: "/invalid.jpg", alt: "Invalid" },
+      status: "open",
+      startDate: new Date("invalid-date-string"),
+      endDate: tomorrow,
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+    {
+      id: "valid",
+      slug: "valid",
+      title: "Valid",
+      summary: "Valid date",
+      coverImage: { src: "/valid.jpg", alt: "Valid" },
+      status: "open",
+      startDate: nextWeek,
+      endDate: new Date(nextWeek.getTime() + 1 * 24 * 60 * 60 * 1000),
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+  ];
+  const next = getNextProgramme(withInvalidDate);
+  expect(next?.id).toBe("valid");
+});
+
+it("excludes open programmes with past start dates from getMoreProgrammes", () => {
+  const withPastOpen: TrainingProgramme[] = [
+    {
+      id: "past-open",
+      slug: "past-open",
+      title: "Past Open",
+      summary: "Already started",
+      coverImage: { src: "/past-open.jpg", alt: "Past Open" },
+      status: "open",
+      startDate: yesterday,
+      endDate: tomorrow,
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+    {
+      id: "future-open",
+      slug: "future-open",
+      title: "Future Open",
+      summary: "Not started",
+      coverImage: { src: "/future-open.jpg", alt: "Future Open" },
+      status: "open",
+      startDate: nextWeek,
+      endDate: new Date(nextWeek.getTime() + 1 * 24 * 60 * 60 * 1000),
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+  ];
+  const more = getMoreProgrammes(withPastOpen);
+  expect(more).toHaveLength(0);
+  expect(more.find((p) => p.id === "past-open")).toBeUndefined();
+});
+
+it("includes ongoing programmes in getMoreProgrammes", () => {
+  const withOngoing: TrainingProgramme[] = [
+    {
+      id: "ongoing-1",
+      slug: "ongoing-1",
+      title: "Ongoing 1",
+      summary: "Happening now",
+      coverImage: { src: "/ongoing-1.jpg", alt: "Ongoing 1" },
+      status: "ongoing",
+      startDate: yesterday,
+      endDate: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+  ];
+  const more = getMoreProgrammes(withOngoing);
+  expect(more).toHaveLength(1);
+  expect(more[0]?.status).toBe("ongoing");
+});
+
+it("filters out ongoing programmes with invalid dates from getMoreProgrammes", () => {
+  const withInvalidOngoing: TrainingProgramme[] = [
+    {
+      id: "invalid-ongoing",
+      slug: "invalid-ongoing",
+      title: "Invalid Ongoing",
+      summary: "Invalid date",
+      coverImage: { src: "/invalid-ongoing.jpg", alt: "Invalid Ongoing" },
+      status: "ongoing",
+      startDate: new Date("invalid-date"),
+      endDate: tomorrow,
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+  ];
+  const more = getMoreProgrammes(withInvalidOngoing);
+  expect(more).toHaveLength(0);
+});
+
+it("filters out previous programmes with invalid end dates", () => {
+  const withInvalidEndDate: TrainingProgramme[] = [
+    {
+      id: "invalid-prev",
+      slug: "invalid-prev",
+      title: "Invalid Previous",
+      summary: "Invalid end date",
+      coverImage: { src: "/invalid-prev.jpg", alt: "Invalid Previous" },
+      status: "previous",
+      startDate: new Date("2024-01-01"),
+      endDate: new Date("not-a-date"),
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+    {
+      id: "valid-prev",
+      slug: "valid-prev",
+      title: "Valid Previous",
+      summary: "Valid end date",
+      coverImage: { src: "/valid-prev.jpg", alt: "Valid Previous" },
+      status: "previous",
+      startDate: new Date("2024-06-01"),
+      endDate: new Date("2024-06-02"),
+      location: "Place",
+      format: "In person",
+      published: true,
+    },
+  ];
+  const previous = getPreviousProgrammes(withInvalidEndDate);
+  expect(previous).toHaveLength(1);
+  expect(previous[0]?.id).toBe("valid-prev");
+});
