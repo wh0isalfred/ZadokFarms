@@ -7,7 +7,7 @@ import { ArrowIcon, ChevronIcon, LocationIcon, SearchIcon } from "@/components/i
 import { FarmClose, FarmServices, FarmStory, BulkSupply, OrderSteps, SiteFooter } from "@/components/home-sections";
 import { MobileNav } from "@/components/mobile-nav";
 import { ProductCard } from "@/components/product-card";
-import { SiteHeader } from "@/components/site-header";
+import { PublicHeader } from "@/components/public-header";
 import { categories, type Category, type Product } from "@/data/products";
 
 function CatalogueSweep({ className = "" }: { className?: string }) {
@@ -71,7 +71,7 @@ export function Storefront({ products }: { products: Product[] }) {
   return (
     <>
       <div className="page-shell" id="top">
-        <SiteHeader basketCount={basketCount} onBasketOpen={() => setBasketOpen(true)} onSearchOpen={() => setShowSearch((open) => !open)} />
+        <PublicHeader basketCount={basketCount} onBasketOpen={() => setBasketOpen(true)} onSearchOpen={() => setShowSearch((open) => !open)} />
         <main>
           <div className="provenance"><LocationIcon /><span>Grown in Omudioga. Available directly from our farm.</span></div>
           <section className={`search-panel ${showSearch ? "open" : ""}`} aria-hidden={!showSearch}>
