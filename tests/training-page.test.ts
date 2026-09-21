@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 
 it("production training page does not import fixtures", async () => {
   // Verify the production route file doesn't import or use trainingFixtures
-  const pageContent = await import("../src/app/training/page.tsx");
+  const pageContent = await import("../src/app/training/page");
   
   // The page should export a default component
   expect(pageContent.default).toBeDefined();
@@ -10,7 +10,7 @@ it("production training page does not import fixtures", async () => {
 });
 
 it("training page metadata is honest about availability", async () => {
-  const pageModule = await import("../src/app/training/page.tsx");
+  const pageModule = await import("../src/app/training/page");
   
   // Verify metadata exists and is properly configured
   expect(pageModule.metadata).toBeDefined();
