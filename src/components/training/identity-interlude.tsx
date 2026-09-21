@@ -26,11 +26,15 @@ function OrbitLeaf({ angle, delay }: { angle: number; delay: number }) {
 
 export function IdentityInterlude() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const frameIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const handleScroll = () => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const updateRotation = () => {
       const element = containerRef.current;
       if (!element) return;
 
@@ -42,7 +46,6 @@ export function IdentityInterlude() {
       const viewportHeight = window.innerHeight;
 
       const scrollProgress = Math.max(0, Math.min(1, (viewportHeight / 2 - distance) / viewportHeight));
-
       const rotation = scrollProgress * 180;
 
       const leafGroup = element.querySelector(".orbit-group");
@@ -51,10 +54,22 @@ export function IdentityInterlude() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    const handleScroll = () => {
+      if (frameIdRef.current !== null) {
+        cancelAnimationFrame(frameIdRef.current);
+      }
+      frameIdRef.current = requestAnimationFrame(updateRotation);
+    };
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    updateRotation();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameIdRef.current !== null) {
+        cancelAnimationFrame(frameIdRef.current);
+      }
+    };
   }, []);
 
   return (

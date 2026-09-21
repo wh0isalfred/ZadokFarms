@@ -1,12 +1,12 @@
 import { TrainingPage } from "@/components/training/page";
-import { trainingFixtures } from "@/data/training-fixtures";
 
 export const metadata = {
   title: "Training | Zadok Farms",
   description:
-    "Learn practical agricultural skills through hands-on training programmes at Zadok Farms. Farmer training, crop production, greenhouse farming, and more.",
+    "Learn practical agricultural skills through hands-on training programmes at Zadok Farms.",
 };
 
+// Production route renders empty state until admin system publishes programmes
 export default function Page() {
-  return <TrainingPage programmes={trainingFixtures} />;
+  return <TrainingPage programmes={[]} />;
 }

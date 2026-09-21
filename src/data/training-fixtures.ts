@@ -1,7 +1,5 @@
 import type { TrainingProgramme } from "@/types/training";
 
-const now = new Date();
-
 export const trainingFixtures: TrainingProgramme[] = [
   {
     id: "prog-001",

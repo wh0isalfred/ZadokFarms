@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowIcon } from "@/components/icons";
 import type { TrainingProgramme } from "@/types/training";
 
 type PreviousTrainingProps = {
@@ -35,10 +33,6 @@ export function PreviousTrainingArchive({ programmes }: PreviousTrainingProps) {
                 {programme.location && ` · ${programme.location}`}
               </p>
             </div>
-
-            <Link href={`/training/${programme.slug}`} className="archive-link" aria-label={`View ${programme.title} programme`}>
-              <ArrowIcon />
-            </Link>
           </article>
         ))}
       </div>
